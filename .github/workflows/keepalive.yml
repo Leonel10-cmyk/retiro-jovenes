@@ -1,0 +1,20 @@
+name: Render Keep-Alive Actuator
+
+on:
+  schedule:
+    # Se ejecuta cada 12 minutos (Render suspende a los 15 minutos de inactividad)
+    - cron: '*/12 * * * *'
+  workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub si se desea
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar ping al servicio en Render
+        run: |
+          URL="${{ secrets.RENDER_APP_URL }}"
+          if [ -z "$URL" ]; then
+            URL="https://retiro-jovenes.onrender.com"
+          fi
+          echo "Haciendo ping a: $URL/api/ping"
+          curl -s -f -m 30 "$URL/api/ping" || echo "Ping enviado (el servicio responderá al reactivarse)"

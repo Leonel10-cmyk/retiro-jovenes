@@ -30,3 +30,4 @@ EXPOSE 8080
 
 # Iniciar la aplicación Spring Boot
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
+

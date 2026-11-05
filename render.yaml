@@ -10,3 +10,4 @@ services:
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
         value: prod
+
