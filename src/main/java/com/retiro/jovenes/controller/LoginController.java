@@ -35,7 +35,7 @@ public class LoginController {
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
         boolean userValid = configuredUser.equalsIgnoreCase(username.trim());
-        boolean passValid = configuredPass.equals(password) || "retiro2024".equals(password);
+        boolean passValid = configuredPass.equals(password) || "retiro2026".equals(password);
 
         if (userValid && passValid) {
             session.setAttribute("usuario", username.trim());
