@@ -19,3 +19,4 @@ public class PingController {
         return ResponseEntity.ok(response);
     }
 }
+

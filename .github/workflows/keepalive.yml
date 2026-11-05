@@ -18,3 +18,4 @@ jobs:
           fi
           echo "Haciendo ping a: $URL/api/ping"
           curl -s -f -m 30 "$URL/api/ping" || echo "Ping enviado (el servicio responderá al reactivarse)"
+
