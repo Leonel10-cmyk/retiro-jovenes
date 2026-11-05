@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Registro - Retiro Jóvenes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-retiro">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-stars"></i> Retiro Jóvenes 2024
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto gap-1 align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="/"><i class="bi bi-house"></i> Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/registro"><i class="bi bi-person-plus"></i> Registrar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/crud"><i class="bi bi-table"></i> Ver Registros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/personas"><i class="bi bi-people"></i> Padrón de Jóvenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/reportes"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a href="/logout" class="btn btn-sm btn-outline-light" title="Cerrar Sesión">
+                            <i class="bi bi-box-arrow-right"></i> Salir
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero-header">
+        <h1><i class="bi bi-stars"></i> II Retiro Presbiterial de Jóvenes</h1>
+        <p>Jóvenes, Volvamos a Dios &bull; Casa de Retiros Bethel-Pachacamác &bull; Canto Grande</p>
+        <p style="color:rgba(255,255,255,0.8); font-size:0.85rem; margin-top:0.25rem;">
+            <i class="bi bi-calendar-event"></i> 11 al 14 de Noviembre
+        </p>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container py-4">
+        <div class="row g-4 justify-content-center">
+            <!-- Card Registrar -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/registro" class="text-decoration-none">
+                    <div class="card-retiro text-center p-4 h-100" style="cursor:pointer;">
+                        <div style="font-size:2.6rem; margin-bottom:0.75rem;">📝</div>
+                        <h5 style="color:var(--marron-profundo); font-weight:800;">Registrar</h5>
+                        <p style="color:#888; font-size:0.85rem;">Busca por nombre, elige modalidad y medio de pago</p>
+                        <button class="btn btn-dorado btn-sm mt-auto w-100">
+                            <i class="bi bi-person-plus"></i> Registrar
+                        </button>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card Ver Registros -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/crud" class="text-decoration-none">
+                    <div class="card-retiro text-center p-4 h-100" style="cursor:pointer;">
+                        <div style="font-size:2.6rem; margin-bottom:0.75rem;">📋</div>
+                        <h5 style="color:var(--marron-profundo); font-weight:800;">Registros</h5>
+                        <p style="color:#888; font-size:0.85rem;">Consulta, edita o elimina los pagos del retiro</p>
+                        <button class="btn btn-outline-dorado btn-sm mt-auto w-100">
+                            <i class="bi bi-table"></i> Ver Asistentes
+                        </button>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card Padrón Jóvenes -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/personas" class="text-decoration-none">
+                    <div class="card-retiro text-center p-4 h-100" style="cursor:pointer;">
+                        <div style="font-size:2.6rem; margin-bottom:0.75rem;">👥</div>
+                        <h5 style="color:var(--marron-profundo); font-weight:800;">Padrón</h5>
+                        <p style="color:#888; font-size:0.85rem;">Ver la lista total de jóvenes, agregar o editar</p>
+                        <button class="btn btn-outline-dorado btn-sm mt-auto w-100">
+                            <i class="bi bi-people"></i> Padrón Jóvenes
+                        </button>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card Reportes por Grupo -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/reportes" class="text-decoration-none">
+                    <div class="card-retiro text-center p-4 h-100" style="cursor:pointer;">
+                        <div style="font-size:2.6rem; margin-bottom:0.75rem;">📊</div>
+                        <h5 style="color:var(--marron-profundo); font-weight:800;">Reportes</h5>
+                        <p style="color:#888; font-size:0.85rem;">Reportes por grupo, lista de pendientes e imprimir</p>
+                        <button class="btn btn-outline-dorado btn-sm mt-auto w-100">
+                            <i class="bi bi-file-earmark-bar-graph"></i> Ver Reportes
+                        </button>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Info Modalidades -->
+        <div class="row g-3 mt-2">
+            <div class="col-12">
+                <h5 style="color:var(--marron-profundo); font-weight:800; text-align:center; margin-bottom:1rem;">
+                    <i class="bi bi-info-circle"></i> Modalidades de Asistencia
+                </h5>
+            </div>
+            <div class="col-md-4">
+                <div class="card-retiro p-3 text-center">
+                    <div style="font-size:2rem;">🚌</div>
+                    <div class="modalidad-price">S/70</div>
+                    <div class="modalidad-title">Jueves a Sábado</div>
+                    <p class="modalidad-desc">Bus, estadía y comida incluidos</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-retiro p-3 text-center" style="border-top: 4px solid var(--dorado-principal);">
+                    <div style="font-size:2rem;">⭐</div>
+                    <div class="modalidad-price">S/80</div>
+                    <div class="modalidad-title">Miércoles a Sábado</div>
+                    <p class="modalidad-desc">Bus, estadía y comida incluidos</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-retiro p-3 text-center">
+                    <div style="font-size:2rem;">🌙</div>
+                    <div class="modalidad-price">S/50</div>
+                    <div class="modalidad-title">Solo Viernes</div>
+                    <p class="modalidad-desc">Estadía, comida y movilidad de regreso</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <span>II Retiro Presbiterial de Jóvenes</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

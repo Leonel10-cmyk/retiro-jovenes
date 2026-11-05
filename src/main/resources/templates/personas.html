@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padrón de Jóvenes - Retiro Jóvenes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-retiro">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="bi bi-stars"></i> Retiro Jóvenes 2024</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon" style="filter:invert(1)"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto gap-1 align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house"></i> Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/registro"><i class="bi bi-person-plus"></i> Registrar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/crud"><i class="bi bi-table"></i> Ver Registros</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/personas"><i class="bi bi-people"></i> Padrón de Jóvenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/reportes"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a href="/logout" class="btn btn-sm btn-outline-light" title="Cerrar Sesión">
+                            <i class="bi bi-box-arrow-right"></i> Salir
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero-header" style="padding: 1.5rem 1rem;">
+        <h1 style="font-size:1.4rem;"><i class="bi bi-people-fill"></i> Padrón de Jóvenes</h1>
+        <p>Base de datos de todos los integrantes de la sociedad</p>
+    </div>
+
+    <div class="container py-4">
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert-retiro-success mb-3" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert-retiro-error mb-3" role="alert">
+            <i class="bi bi-exclamation-circle"></i> <span th:text="${error}"></span>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" th:data-value="${totalPersonas}" th:text="${totalPersonas}">0</div>
+                    <div class="stat-label">Total Jóvenes</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" th:data-value="${totalMiembros}" th:text="${totalMiembros}">0</div>
+                    <div class="stat-label">Miembros</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" th:data-value="${totalAspirantes}" th:text="${totalAspirantes}">0</div>
+                    <div class="stat-label">Aspirantes</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" th:data-value="${totalLideres}" th:text="${totalLideres}">0</div>
+                    <div class="stat-label">Líderes / Directivos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action bar -->
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 style="color:var(--marron-profundo); font-weight:800; margin:0;">
+                <i class="bi bi-person-lines-fill"></i> Lista de Jóvenes
+            </h5>
+            <button class="btn btn-dorado btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevoJoven">
+                <i class="bi bi-person-plus-fill"></i> + Agregar Joven
+            </button>
+        </div>
+
+        <!-- Search input -->
+        <div class="mb-3">
+            <div class="search-container">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" id="jovenesSearch" class="search-input" placeholder="Buscar por nombre, apellido, rol o número de grupo...">
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card-retiro">
+            <div class="table-responsive">
+                <table class="table table-retiro mb-0" id="jovenesTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th><i class="bi bi-person"></i> Nombre Completo</th>
+                            <th><i class="bi bi-award"></i> Rol</th>
+                            <th><i class="bi bi-people"></i> Grupo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jovenesTableBody">
+                        <tr th:each="p, stat : ${personas}">
+                            <td th:text="${stat.count}" style="color:#aaa; font-size:0.85rem;"></td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="person-avatar" style="width:34px;height:34px;font-size:0.8rem;background:linear-gradient(135deg,var(--dorado-principal),var(--dorado-oscuro));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex-shrink:0;"
+                                         th:text="${p.iniciales}"></div>
+                                    <div>
+                                        <div style="font-weight:700; color:var(--marron-profundo);" th:text="${p.nombreCompleto}"></div>
+                                        <small style="color:#999;" th:text="'ID: #' + ${p.id}"></small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-rol"
+                                      th:classappend="'badge-' + ${p.rol.name()}"
+                                      th:text="${p.rol.displayName}"></span>
+                            </td>
+                            <td>
+                                <span class="badge-grupo" th:text="'Grupo ' + ${p.numeroGrupo}"></span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <a th:href="@{/personas/editar/{id}(id=${p.id})}"
+                                       class="btn btn-sm"
+                                       style="background:var(--dorado-principal);color:white;border-radius:8px;padding:0.3rem 0.6rem;"
+                                       title="Editar Joven">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form th:action="@{/personas/eliminar/{id}(id=${p.id})}" method="POST" style="display:inline;">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger btn-eliminar-joven"
+                                                style="border-radius:8px;padding:0.3rem 0.6rem;"
+                                                th:data-nombre="${p.nombreCompleto}"
+                                                title="Eliminar Joven">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVO JOVEN -->
+    <div class="modal fade" id="modalNuevoJoven" tabindex="-1" aria-labelledby="modalNuevoJovenLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius:16px; border:none; box-shadow:0 8px 30px var(--sombra);">
+                <div class="modal-header" style="background:linear-gradient(135deg, var(--dorado-oscuro), var(--marron-profundo)); color:white; border-radius:16px 16px 0 0;">
+                    <h5 class="modal-title" id="modalNuevoJovenLabel">
+                        <i class="bi bi-person-plus-fill" style="color:var(--dorado-principal);"></i> Agregar Nuevo Joven
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/personas/guardar" method="POST">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="color:var(--marron-profundo);">Nombres <span class="text-danger">*</span></label>
+                            <input type="text" name="nombres" class="form-control" placeholder="Ej. Juan Carlos" required style="border-radius:10px; border:2px solid #e8d5b0;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="color:var(--marron-profundo);">Apellidos</label>
+                            <input type="text" name="apellidos" class="form-control" placeholder="Ej. Pérez García" style="border-radius:10px; border:2px solid #e8d5b0;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="color:var(--marron-profundo);">Rol <span class="text-danger">*</span></label>
+                            <select name="rol" class="form-select" required style="border-radius:10px; border:2px solid #e8d5b0;">
+                                <option th:each="r : ${roles}" th:value="${r.name()}" th:text="${r.displayName}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="color:var(--marron-profundo);">Número de Grupo (1 al 20) <span class="text-danger">*</span></label>
+                            <input type="number" name="numeroGrupo" class="form-control" min="1" max="20" required style="border-radius:10px; border:2px solid #e8d5b0;">
+                        </div>
+                    </div>
+                    <div class="modal-footer p-3" style="background:var(--fondo-claro); border-radius:0 0 16px 16px;">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius:10px;">Cancelar</button>
+                        <button type="submit" class="btn btn-dorado" style="border-radius:10px;">
+                            <i class="bi bi-save"></i> Guardar Joven
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <span>II Retiro Presbiterial de Jóvenes</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        // Live search filter
+        const searchInput = document.getElementById('jovenesSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const term = this.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('#jovenesTableBody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
+        }
+
+        // Delete confirm listener
+        document.querySelectorAll('.btn-eliminar-joven').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const nombre = this.getAttribute('data-nombre') || 'este joven';
+                if (!confirm(`¿Estás seguro de eliminar a ${nombre} del padrón?`)) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

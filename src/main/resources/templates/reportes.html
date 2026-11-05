@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes por Grupo - Retiro Jóvenes 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        .badge-estado-REGISTRADO {
+            background: linear-gradient(135deg, #198754, #20c997);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .badge-estado-PENDIENTE {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: #5c3a00;
+            padding: 0.35rem 0.75rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        /* ===== ESTILOS DE IMPRESIÓN Y EXPORTACIÓN A PDF ===== */
+        @page {
+            size: landscape;
+            margin: 8mm 10mm;
+        }
+
+        @media print {
+            html, body {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #000 !important;
+                font-size: 9pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .navbar-retiro, .hero-header, .no-print, footer, .card-header .no-print {
+                display: none !important;
+            }
+
+            .container, .container-fluid {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .card-retiro {
+                box-shadow: none !important;
+                border: 1px solid #bbb !important;
+                border-radius: 6px !important;
+                margin: 0 !important;
+                width: 100% !important;
+                overflow: visible !important;
+            }
+
+            .card-header {
+                background: #5C3A00 !important;
+                color: white !important;
+                font-size: 10pt !important;
+                padding: 6px 10px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .table-responsive {
+                overflow: visible !important;
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .table-retiro {
+                width: 100% !important;
+                table-layout: auto !important;
+                font-size: 8.5pt !important;
+                border-collapse: collapse !important;
+                margin: 0 !important;
+            }
+
+            .table-retiro thead th {
+                background-color: #5C3A00 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                padding: 5px 6px !important;
+                font-size: 8.5pt !important;
+                border: 1px solid #442a00 !important;
+                white-space: nowrap !important;
+                text-align: center !important;
+            }
+
+            .table-retiro tbody td {
+                padding: 4px 6px !important;
+                border: 1px solid #ccc !important;
+                font-size: 8pt !important;
+                vertical-align: middle !important;
+            }
+
+            .person-avatar {
+                display: none !important;
+            }
+
+            .badge-rol, .badge-grupo, .badge-pago, .badge-estado-REGISTRADO, .badge-estado-PENDIENTE, .badge {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                padding: 2px 6px !important;
+                font-size: 7.5pt !important;
+                border-radius: 6px !important;
+                white-space: nowrap !important;
+                display: inline-block !important;
+            }
+
+            .print-header {
+                display: block !important;
+                margin-bottom: 10px !important;
+            }
+
+            .print-stats-box {
+                display: flex !important;
+                justify-content: space-between !important;
+                background: #fbf5e6 !important;
+                border: 1px solid #d4a34b !important;
+                border-radius: 6px !important;
+                padding: 5px 10px !important;
+                margin-bottom: 8px !important;
+                font-size: 8pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        .print-header {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-retiro no-print">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="bi bi-stars"></i> Retiro Jóvenes 2024</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon" style="filter:invert(1)"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto gap-1 align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house"></i> Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/registro"><i class="bi bi-person-plus"></i> Registrar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/crud"><i class="bi bi-table"></i> Ver Registros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/personas"><i class="bi bi-people"></i> Padrón de Jóvenes</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/reportes"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a href="/logout" class="btn btn-sm btn-outline-light" title="Cerrar Sesión">
+                            <i class="bi bi-box-arrow-right"></i> Salir
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero-header no-print" style="padding: 1.5rem 1rem;">
+        <h1 style="font-size:1.4rem;"><i class="bi bi-file-earmark-bar-graph-fill"></i> Reportes de Inscritos por Grupo</h1>
+        <p>Listado exclusivo de jóvenes inscritos con pago completo o adelanto</p>
+    </div>
+
+    <!-- PRINT ONLY HEADER (Visible al imprimir o guardar en PDF) -->
+    <div class="print-header">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+            <div>
+                <h4 style="margin:0; font-weight:900; color:#5C3A00; text-transform:uppercase; font-size:13pt;">
+                    II RETIRO PRESBITERIAL DE JÓVENES &bull; VOLVAMOS A DIOS
+                </h4>
+                <div style="font-size:10.5pt; font-weight:700; color:#8B6013;"
+                     th:text="${grupoSeleccionado == 0 ? 'REPORTE GENERAL DE ASISTENTES INSCRITOS (TODOS LOS GRUPOS)' : 'REPORTE DE ASISTENTES INSCRITOS - GRUPO ' + grupoSeleccionado}">
+                </div>
+                <div style="font-size:8pt; color:#666;">
+                    Casa de Retiros Bethel - Pachacámac &bull; Canto Grande
+                </div>
+            </div>
+            <div class="text-end" style="font-size:8pt; color:#555;">
+                <div><strong>Fecha de emisión:</strong> <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}"></span></div>
+                <div><strong>Sistema:</strong> Retiro Jóvenes 2026</div>
+            </div>
+        </div>
+
+        <div class="print-stats-box">
+            <div><strong>Total Inscritos:</strong> <span th:text="${totalRegistrados}">0</span></div>
+            <div><strong>Pagos Completos:</strong> <span th:text="${cantCompletos}">0</span></div>
+            <div><strong>Con Adelanto:</strong> <span th:text="${cantAdelantos}">0</span></div>
+            <div><strong>Total Recaudado:</strong> S/ <span th:text="${totalRecaudado}">0</span></div>
+            <div><strong>Saldo por Cobrar:</strong> S/ <span th:text="${totalSaldoPendiente}">0</span></div>
+            <div><strong>Yape/Plin:</strong> <span th:text="${cantYapePlin}">0</span> (S/ <span th:text="${totalYapePlin}">0</span>)</div>
+            <div><strong>Efectivo:</strong> <span th:text="${cantEfectivo}">0</span> (S/ <span th:text="${totalEfectivo}">0</span>)</div>
+        </div>
+    </div>
+
+    <div class="container-fluid px-3 px-xl-5 py-4" style="max-width: 1600px;">
+        <!-- FILTER BAR -->
+        <div class="card-retiro p-3 mb-4 no-print">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-5">
+                    <label class="fw-bold mb-1" style="color:var(--marron-profundo);">
+                        <i class="bi bi-funnel-fill" style="color:var(--dorado-principal);"></i> Seleccionar Grupo:
+                    </label>
+                    <select id="selectGrupo" class="form-select" style="border-radius:10px; border:2px solid var(--dorado-principal); font-weight:700;" onchange="cambiarGrupo(this.value)">
+                        <option value="0" th:selected="${grupoSeleccionado == 0}">🌟 Todos los Grupos (General)</option>
+                        <option th:each="g : ${grupos}"
+                                th:value="${g}"
+                                th:text="'Grupo ' + ${g}"
+                                th:selected="${g == grupoSeleccionado}"></option>
+                    </select>
+                </div>
+
+                <div class="col-md-7 d-flex justify-content-md-end gap-2 align-items-end flex-wrap">
+                    <button class="btn btn-dorado" onclick="window.print()">
+                        <i class="bi bi-printer-fill"></i> Imprimir / Guardar PDF
+                    </button>
+                    <a th:href="@{/reportes/exportar-csv(grupo=${grupoSeleccionado})}" class="btn btn-outline-dorado">
+                        <i class="bi bi-file-earmark-excel"></i> Descargar CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS CARDS (no-print) -->
+        <div class="row g-3 mb-4 no-print">
+            <div class="col-6 col-md-3">
+                <div class="stat-card" style="border-top-color:#198754;">
+                    <div class="stat-number" style="color:#198754;" th:data-value="${totalRegistrados}" th:text="${totalRegistrados}">0</div>
+                    <div class="stat-label">Total Inscritos</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card" style="border-top-color:#20c997;">
+                    <div class="stat-number" style="color:#20c997;" th:data-value="${cantCompletos}" th:text="${cantCompletos}">0</div>
+                    <div class="stat-label">✅ Pago Completo</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card" style="border-top-color:#fd7e14;">
+                    <div class="stat-number" style="color:#fd7e14;" th:data-value="${cantAdelantos}" th:text="${cantAdelantos}">0</div>
+                    <div class="stat-label">⏳ Con Adelanto</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" th:data-value="${totalRecaudado}" th:text="${totalRecaudado}">0</div>
+                    <div class="stat-label">Total Recaudado (S/)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUMMARY BREAKDOWN (no-print) -->
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2 p-3 no-print"
+             style="background:white; border-radius:12px; border:1px solid #e8d5b0;">
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <span class="badge-pago badge-YAPE_PLIN">
+                    📱 Yape / Plin: <strong th:text="${cantYapePlin} + ' (S/ ' + ${totalYapePlin} + ')'"></strong>
+                </span>
+                <span class="badge-pago badge-EFECTIVO">
+                    💵 Efectivo: <strong th:text="${cantEfectivo} + ' (S/ ' + ${totalEfectivo} + ')'"></strong>
+                </span>
+                <span th:if="${totalSaldoPendiente > 0}" class="badge bg-danger" style="font-size:0.85rem; padding:0.45rem 0.75rem;">
+                    ⚠️ Saldo Total por Cobrar: <strong th:text="'S/ ' + ${totalSaldoPendiente}"></strong>
+                </span>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <span class="badge bg-secondary">Mié-Sáb: <span th:text="${cantMiercolesSabado}">0</span></span>
+                <span class="badge bg-secondary">Jue-Sáb: <span th:text="${cantJuevesSabado}">0</span></span>
+                <span class="badge bg-secondary">Solo Vier: <span th:text="${cantSoloViernes}">0</span></span>
+            </div>
+        </div>
+
+        <!-- DETAILED TABLE -->
+        <div class="card-retiro">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <i class="bi bi-list-check"></i>
+                    <span th:text="${grupoSeleccionado == 0 ? 'Listado de Todos los Jóvenes Inscritos' : 'Jóvenes Inscritos del Grupo ' + grupoSeleccionado}"></span>
+                    <span class="badge bg-dark ms-2" th:text="${totalRegistrados} + ' inscritos'"></span>
+                </div>
+                <div class="no-print">
+                    <input type="text" id="reporteSearch" class="form-control form-control-sm" placeholder="🔍 Filtrar en este reporte..." style="width:220px; border-radius:8px;">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-retiro mb-0" id="tablaReporte">
+                    <thead>
+                        <tr>
+                            <th style="width:35px; text-align:center;">#</th>
+                            <th style="min-width:180px;">Joven</th>
+                            <th style="white-space:nowrap; text-align:center;">Rol</th>
+                            <th style="white-space:nowrap; text-align:center;">Grupo</th>
+                            <th style="white-space:nowrap;">Modalidad</th>
+                            <th style="white-space:nowrap; text-align:center;">Medio de Pago</th>
+                            <th style="white-space:nowrap; text-align:right;">Monto Pagado</th>
+                            <th style="white-space:nowrap; text-align:right;">Saldo Pendiente</th>
+                            <th style="white-space:nowrap; text-align:center;">Estado de Pago</th>
+                            <th style="white-space:nowrap; text-align:center;">Fecha Registro</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reporteTableBody">
+                        <tr th:if="${#lists.isEmpty(registros)}">
+                            <td colspan="10" class="text-center py-5 text-muted">
+                                <i class="bi bi-info-circle display-4 d-block mb-3" style="color:var(--dorado-principal); opacity:0.6;"></i>
+                                <h5 class="fw-bold">No hay personas inscritas aún</h5>
+                                <p class="mb-0" th:text="${grupoSeleccionado == 0 ? 'Todavía no se ha registrado ningún joven en el sistema.' : 'No hay jóvenes registrados en el Grupo ' + grupoSeleccionado + '.'}"></p>
+                            </td>
+                        </tr>
+                        <tr th:each="r, stat : ${registros}">
+                            <td th:text="${stat.count}" style="color:#888; font-size:0.85rem; text-align:center;"></td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="person-avatar" style="width:30px;height:30px;font-size:0.75rem;background:linear-gradient(135deg,var(--dorado-principal),var(--dorado-oscuro));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex-shrink:0;"
+                                         th:text="${r.persona.iniciales}"></div>
+                                    <span th:text="${r.persona.nombreCompleto}" style="font-weight:700;"></span>
+                                </div>
+                            </td>
+                            <td style="white-space:nowrap; text-align:center;">
+                                <span class="badge-rol"
+                                      th:classappend="'badge-' + ${r.persona.rol.name()}"
+                                      th:text="${r.persona.rol.displayName}"></span>
+                            </td>
+                            <td style="white-space:nowrap; text-align:center;">
+                                <span class="badge-grupo" th:text="'Grupo ' + ${r.persona.numeroGrupo}"></span>
+                            </td>
+                            <td style="white-space:nowrap;">
+                                <span th:text="${r.modalidad.displayName}"></span>
+                            </td>
+                            <td style="white-space:nowrap; text-align:center;">
+                                <span class="badge-pago"
+                                      th:classappend="'badge-' + ${r.medioPago.name()}"
+                                      th:text="${r.medioPago.icono + ' ' + r.medioPago.displayName}"></span>
+                            </td>
+                            <td style="white-space:nowrap; text-align:right;">
+                                <strong style="color:var(--dorado-oscuro);" th:text="'S/ ' + ${r.montoPagado}"></strong>
+                            </td>
+                            <td style="white-space:nowrap; text-align:right;">
+                                <span th:if="${r.saldoPendiente > 0}" style="color:#dc3545; font-weight:700;" th:text="'S/ ' + ${r.saldoPendiente}"></span>
+                                <span th:unless="${r.saldoPendiente > 0}" class="text-muted">S/ 0</span>
+                            </td>
+                            <td style="white-space:nowrap; text-align:center;">
+                                <span th:if="${r.pagoCompleto}" class="badge-estado-REGISTRADO">
+                                    <i class="bi bi-check-circle-fill"></i> Completo
+                                </span>
+                                <span th:unless="${r.pagoCompleto}" class="badge-estado-PENDIENTE" th:title="'Resta pagar S/ ' + ${r.saldoPendiente}">
+                                    <i class="bi bi-clock-history"></i> Adelanto (Resta S/ <span th:text="${r.saldoPendiente}"></span>)
+                                </span>
+                            </td>
+                            <td style="font-size:0.8rem; color:#666; white-space:nowrap; text-align:center;">
+                                <span th:if="${r.fechaRegistro != null}"
+                                      th:text="${#temporals.format(r.fechaRegistro, 'dd/MM HH:mm')}"></span>
+                                <span th:unless="${r.fechaRegistro != null}">-</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="no-print">
+        <span>II Retiro Presbiterial de Jóvenes</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        function cambiarGrupo(grupo) {
+            window.location.href = '/reportes?grupo=' + grupo;
+        }
+
+        const inputSearch = document.getElementById('reporteSearch');
+        if (inputSearch) {
+            inputSearch.addEventListener('input', function() {
+                const term = this.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('#reporteTableBody tr');
+                rows.forEach(row => {
+                    if (row.cells.length > 1) {
+                        row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

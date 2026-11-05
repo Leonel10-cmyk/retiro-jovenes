@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros - Retiro Jóvenes 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        @page {
+            size: landscape;
+            margin: 8mm 10mm;
+        }
+
+        @media print {
+            html, body {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #000 !important;
+                font-size: 9pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .navbar-retiro, .hero-header, .no-print, footer, .card-header .no-print, .col-acciones {
+                display: none !important;
+            }
+
+            .container, .container-fluid {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .card-retiro {
+                box-shadow: none !important;
+                border: 1px solid #bbb !important;
+                border-radius: 6px !important;
+                margin: 0 !important;
+                width: 100% !important;
+                overflow: visible !important;
+            }
+
+            .table-responsive {
+                overflow: visible !important;
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .table-retiro {
+                width: 100% !important;
+                table-layout: auto !important;
+                font-size: 8.5pt !important;
+                border-collapse: collapse !important;
+                margin: 0 !important;
+            }
+
+            .table-retiro thead th {
+                background-color: #5C3A00 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                padding: 5px 6px !important;
+                font-size: 8.5pt !important;
+                border: 1px solid #442a00 !important;
+                white-space: nowrap !important;
+                text-align: center !important;
+            }
+
+            .table-retiro tbody td {
+                padding: 4px 6px !important;
+                border: 1px solid #ccc !important;
+                font-size: 8pt !important;
+                vertical-align: middle !important;
+            }
+
+            .person-avatar {
+                display: none !important;
+            }
+
+            .badge-rol, .badge-grupo, .badge-pago, .badge {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                padding: 2px 6px !important;
+                font-size: 7.5pt !important;
+                border-radius: 6px !important;
+                white-space: nowrap !important;
+                display: inline-block !important;
+            }
+
+            .print-header {
+                display: block !important;
+                margin-bottom: 10px !important;
+            }
+
+            .print-stats-box {
+                display: flex !important;
+                justify-content: space-between !important;
+                background: #fbf5e6 !important;
+                border: 1px solid #d4a34b !important;
+                border-radius: 6px !important;
+                padding: 5px 10px !important;
+                margin-bottom: 8px !important;
+                font-size: 8pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        .print-header {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-retiro no-print">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="bi bi-stars"></i> Retiro Jóvenes 2024</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon" style="filter:invert(1)"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto gap-1 align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house"></i> Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/registro"><i class="bi bi-person-plus"></i> Registrar</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/crud"><i class="bi bi-table"></i> Ver Registros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/personas"><i class="bi bi-people"></i> Padrón de Jóvenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/reportes"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a href="/logout" class="btn btn-sm btn-outline-light" title="Cerrar Sesión">
+                            <i class="bi bi-box-arrow-right"></i> Salir
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero-header no-print" style="padding: 1.5rem 1rem;">
+        <h1 style="font-size:1.4rem;"><i class="bi bi-table"></i> Panel CRUD de Asistentes Registrados</h1>
+        <p>Control general, cobros, adelantos y edición de inscripciones</p>
+    </div>
+
+    <!-- PRINT HEADER -->
+    <div class="print-header">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+            <div>
+                <h4 style="margin:0; font-weight:900; color:#5C3A00; text-transform:uppercase; font-size:13pt;">
+                    II RETIRO PRESBITERIAL DE JÓVENES &bull; VOLVAMOS A DIOS
+                </h4>
+                <div style="font-size:10.5pt; font-weight:700; color:#8B6013;">
+                    LISTADO GENERAL COMPLETO DE REGISTROS DE ASISTENCIA
+                </div>
+                <div style="font-size:8pt; color:#666;">
+                    Casa de Retiros Bethel - Pachacámac &bull; Canto Grande
+                </div>
+            </div>
+            <div class="text-end" style="font-size:8pt; color:#555;">
+                <div><strong>Fecha:</strong> <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}"></span></div>
+                <div><strong>Total Registrados:</strong> <span th:text="${registros.size()}">0</span></div>
+            </div>
+        </div>
+
+        <div class="print-stats-box">
+            <div><strong>Total Registrados:</strong> <span th:text="${registros.size()}">0</span></div>
+            <div><strong>Pagos Completos:</strong> <span th:text="${cantCompletos}">0</span></div>
+            <div><strong>Con Adelanto:</strong> <span th:text="${cantAdelantos}">0</span></div>
+            <div><strong>Total Recaudado:</strong> S/ <span th:text="${totalRecaudado}">0</span></div>
+            <div><strong>Saldo por Cobrar:</strong> S/ <span th:text="${totalSaldoPendiente}">0</span></div>
+            <div><strong>Yape/Plin:</strong> <span th:text="${cantYapePlin}">0</span> (S/ <span th:text="${totalYapePlin}">0</span>)</div>
+            <div><strong>Efectivo:</strong> <span th:text="${cantEfectivo}">0</span> (S/ <span th:text="${totalEfectivo}">0</span>)</div>
+        </div>
+    </div>
+
+    <div class="container-fluid px-3 px-xl-5 py-4" style="max-width: 1600px;">
+        <!-- Alert messages -->
+        <div th:if="${success}" class="alert-retiro-success mb-3 no-print" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert-retiro-error mb-3 no-print" role="alert">
+            <i class="bi bi-exclamation-circle"></i> <span th:text="${error}"></span>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4 no-print">
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" th:data-value="${registros.size()}" th:text="${registros.size()}">0</div>
+                    <div class="stat-label">Total Registrados</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" th:data-value="${cantJuevesSabado}" th:text="${cantJuevesSabado}">0</div>
+                    <div class="stat-label">Jue-Sáb (S/70)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" th:data-value="${cantMiercolesSabado}" th:text="${cantMiercolesSabado}">0</div>
+                    <div class="stat-label">Mié-Sáb (S/80)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" th:data-value="${cantSoloViernes}" th:text="${cantSoloViernes}">0</div>
+                    <div class="stat-label">Solo Vier. (S/50)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Totales y Medios de Pago -->
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2 p-3 no-print"
+            style="background:white; border-radius:12px; border:1px solid #e8d5b0;">
+            <div class="d-flex gap-3 align-items-center flex-wrap">
+                <span class="badge-pago badge-YAPE_PLIN" style="font-size:0.9rem; padding:0.4rem 0.9rem;">
+                    📱 Yape / Plin: <strong th:text="${cantYapePlin} + ' (S/ ' + ${totalYapePlin} + ')'">0</strong>
+                </span>
+                <span class="badge-pago badge-EFECTIVO" style="font-size:0.9rem; padding:0.4rem 0.9rem;">
+                    💵 Efectivo: <strong th:text="${cantEfectivo} + ' (S/ ' + ${totalEfectivo} + ')'">0</strong>
+                </span>
+                <span class="badge bg-success" style="font-size:0.85rem; padding:0.4rem 0.8rem; border-radius:15px;">
+                    ✅ Pagos Completos: <strong th:text="${cantCompletos}">0</strong>
+                </span>
+                <span class="badge bg-warning text-dark" style="font-size:0.85rem; padding:0.4rem 0.8rem; border-radius:15px;">
+                    ⏳ Con Adelanto: <strong th:text="${cantAdelantos}">0</strong>
+                </span>
+            </div>
+            <div class="text-end">
+                <div style="font-weight:800; color:var(--marron-profundo); font-size:1.15rem;">
+                    <i class="bi bi-cash-coin" style="color:var(--dorado-principal);"></i> Recaudado:
+                    <span style="color:var(--dorado-oscuro);" th:text="'S/ ' + ${totalRecaudado}">S/ 0</span>
+                </div>
+                <div th:if="${totalSaldoPendiente > 0}" style="font-size:0.85rem; font-weight:700; color:#dc3545;">
+                    <i class="bi bi-hourglass-bottom"></i> Saldo por cobrar: S/ <span th:text="${totalSaldoPendiente}">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2 no-print">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <h5 style="color:var(--marron-profundo); font-weight:800; margin:0;">
+                    <i class="bi bi-people"></i> Asistentes Registrados
+                </h5>
+                <span class="badge bg-dark ms-1" th:text="${registros.size()} + ' en total'"></span>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <input type="text" id="crudSearch" class="form-control form-control-sm" placeholder="🔍 Buscar en registros..." style="min-width:240px; border-radius:8px;">
+                <button class="btn btn-outline-dorado btn-sm" onclick="window.print()">
+                    <i class="bi bi-printer-fill"></i> Imprimir / PDF
+                </button>
+                <a href="/reportes" class="btn btn-outline-dorado btn-sm">
+                    <i class="bi bi-file-earmark-bar-graph"></i> Reportes por Grupo
+                </a>
+                <a href="/registro" class="btn btn-dorado btn-sm">
+                    <i class="bi bi-person-plus"></i> + Nuevo Registro
+                </a>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card-retiro" th:if="${!registros.isEmpty()}">
+            <div class="table-responsive">
+                <table class="table table-retiro mb-0" id="crudTable">
+                    <thead>
+                        <tr>
+                            <th style="width:35px; text-align:center;">#</th>
+                            <th style="min-width:180px;"><i class="bi bi-person"></i> Nombre Completo</th>
+                            <th style="white-space:nowrap; text-align:center;"><i class="bi bi-award"></i> Rol</th>
+                            <th style="white-space:nowrap; text-align:center;"><i class="bi bi-people"></i> Grupo</th>
+                            <th style="white-space:nowrap;"><i class="bi bi-calendar"></i> Modalidad</th>
+                            <th style="white-space:nowrap; text-align:center;"><i class="bi bi-credit-card"></i> Pago</th>
+                            <th style="white-space:nowrap; text-align:right;"><i class="bi bi-cash"></i> Pagado</th>
+                            <th style="white-space:nowrap; text-align:right;"><i class="bi bi-hourglass-split"></i> Saldo</th>
+                            <th style="white-space:nowrap; text-align:center;"><i class="bi bi-patch-check"></i> Estado</th>
+                            <th style="white-space:nowrap; text-align:center;"><i class="bi bi-clock"></i> Fecha</th>
+                            <th style="white-space:nowrap; text-align:center;" class="col-acciones">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="crudTableBody">
+                        <tr th:each="reg, stat : ${registros}">
+                            <td th:text="${stat.count}" style="color:#888; font-size:0.85rem; text-align:center;"></td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="person-avatar"
+                                        style="width:30px;height:30px;font-size:0.75rem;background:linear-gradient(135deg,var(--dorado-principal),var(--dorado-oscuro));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex-shrink:0;"
+                                        th:text="${reg.persona.iniciales}"></div>
+                                    <span th:text="${reg.persona.getNombreCompleto()}" style="font-weight:700;"></span>
+                                </div>
+                            </td>
+                            <td style="white-space:nowrap; text-align:center;">
+                                <span class="badge-rol" th:classappend="'badge-' + ${reg.persona.rol.name()}"
+                                    th:text="${reg.persona.rol.getDisplayName()}"></span>
+                            </td>
+                            <td style="white-space:nowrap; text-align:center;">
+                                <span class="badge-grupo" th:text="'Grupo ' + ${reg.persona.numeroGrupo}"></span>
+                            </td>
+                            <td style="white-space:nowrap;" th:text="${reg.modalidad.getDisplayName()}"></td>
+                            <td style="white-space:nowrap; text-align:center;">
+                                <span class="badge-pago" th:classappend="'badge-' + ${reg.medioPago.name()}"
+                                    th:text="${reg.medioPago.icono + ' ' + reg.medioPago.displayName}"></span>
+                            </td>
+                            <td style="white-space:nowrap; text-align:right;">
+                                <strong style="color:var(--dorado-oscuro);" th:text="'S/ ' + ${reg.montoPagado}"></strong>
+                            </td>
+                            <td style="white-space:nowrap; text-align:right;">
+                                <span th:if="${reg.saldoPendiente > 0}" style="color:#dc3545; font-weight:700;" th:text="'S/ ' + ${reg.saldoPendiente}"></span>
+                                <span th:unless="${reg.saldoPendiente > 0}" style="color:#198754; font-weight:600;">S/ 0</span>
+                            </td>
+                            <td style="white-space:nowrap; text-align:center;">
+                                <span th:if="${reg.pagoCompleto}" class="badge bg-success" style="border-radius:12px; font-size:0.8rem; padding:0.35rem 0.65rem;">
+                                    ✅ Completo
+                                </span>
+                                <span th:unless="${reg.pagoCompleto}" class="badge bg-warning text-dark" style="border-radius:12px; font-size:0.8rem; padding:0.35rem 0.65rem;">
+                                    ⏳ Adelanto
+                                </span>
+                            </td>
+                            <td style="font-size:0.8rem; color:#666; white-space:nowrap; text-align:center;"
+                                th:text="${#temporals.format(reg.fechaRegistro, 'dd/MM HH:mm')}"></td>
+                            <td class="col-acciones" style="white-space:nowrap; text-align:center;">
+                                <div class="d-flex gap-1 align-items-center justify-content-center">
+                                    <!-- Botón rápido completar pago -->
+                                    <form th:if="${!reg.pagoCompleto}" th:action="@{/crud/completar-pago/{id}(id=${reg.id})}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-success" style="border-radius:8px; padding:0.3rem 0.6rem; font-size:0.8rem; font-weight:700;" title="Completar Pago Total" onclick="return confirm('¿Confirmar que este asistente completó el pago total de su retiro?')">
+                                            <i class="bi bi-check-all"></i> Completar
+                                        </button>
+                                    </form>
+
+                                    <a th:href="@{/crud/editar/{id}(id=${reg.id})}" class="btn btn-sm"
+                                        style="background:var(--dorado-principal);color:white;border-radius:8px;padding:0.3rem 0.6rem;"
+                                        title="Editar Registro">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form th:action="@{/crud/eliminar/{id}(id=${reg.id})}" method="POST"
+                                        style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger btn-eliminar"
+                                            style="border-radius:8px;padding:0.3rem 0.6rem;"
+                                            th:data-nombre="${reg.persona.nombreCompleto}"
+                                            title="Eliminar Registro">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Empty state -->
+        <div th:if="${registros.isEmpty()}" class="card-retiro text-center p-5">
+            <div style="font-size:4rem; margin-bottom:1rem;">📭</div>
+            <h5 style="color:var(--marron-profundo);">No hay registros aún</h5>
+            <p style="color:#888;">Comienza registrando a los asistentes al retiro</p>
+            <a href="/registro" class="btn btn-dorado mt-2">
+                <i class="bi bi-person-plus"></i> Registrar primer asistente
+            </a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="no-print">
+        <span>II Retiro Presbiterial de Jóvenes</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        const crudSearchInput = document.getElementById('crudSearch');
+        if (crudSearchInput) {
+            crudSearchInput.addEventListener('input', function() {
+                const term = this.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('#crudTableBody tr');
+                rows.forEach(row => {
+                    row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

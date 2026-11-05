@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: retiro-jovenes
+    env: docker
+    plan: free
+    region: oregon
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod

@@ -1,0 +1,240 @@
+-- ==========================================================
+-- INTEGRANTES DE SOCIEDAD DE JOVENES 2026
+-- II RETIRO PRESBITERIAL DE JOVENES "VOLVAMOS A DIOS"
+-- ==========================================================
+
+INSERT INTO persona (id, nombres, apellidos, rol, numero_grupo)
+SELECT * FROM (VALUES
+  -- DIRECTIVOS / SUPERVISORES
+  (1,  'Brandon',           'Manuyama',           'DIRECTIVO',      1),
+  (2,  'Jilmar',            'Perez',              'DIRECTIVO',      3),
+  (3,  'Juan',              'Yalico',             'DIRECTIVO',      5),
+  (4,  'Feliciano',         'Pilco',              'DIRECTIVO',      6),
+  (5,  'Judith',            'Bautista',           'DIRECTIVO',     12),
+  (6,  'Margarita',         'Moreno',             'DIRECTIVO',     14),
+  (7,  'Maria',             'Ari',                'DIRECTIVO',     16),
+  (8,  'Delith',            'Rosales',            'DIRECTIVO',     19),
+
+  -- GRUPO 1 (Miembros)
+  (10, 'Yanderson',         'Pena',               'LIDER_CAPITAN',  1),
+  (11, 'Isaac',             'Neciosup',           'LIDER_ALTERNO',  1),
+  (12, 'Willan',            '',                   'MIEMBRO',        1),
+  (13, 'Batistin',          'Diaz',               'MIEMBRO',        1),
+  (14, 'Marcos',            'Mosombite',          'MIEMBRO',        1),
+  (15, 'Manuel',            'Socazaire',          'MIEMBRO',        1),
+  (16, 'Carlos',            'Paredes',            'MIEMBRO',        1),
+  (17, 'Misael',            'Herrera',            'MIEMBRO',        1),
+  (18, 'Felipe',            'Noel',               'MIEMBRO',        1),
+  (19, 'Josue',             'Herrera',            'MIEMBRO',        1),
+
+  -- GRUPO 2 (Miembros)
+  (20, 'Yelvin',            'Chavez',             'LIDER_CAPITAN',  2),
+  (21, 'Italo',             'Galvez',             'LIDER_ALTERNO',  2),
+  (22, 'Caleb',             'Minaya',             'MIEMBRO',        2),
+  (23, 'Vidal',             'Aysa',               'MIEMBRO',        2),
+  (24, 'Samuel',            'Marquez',            'MIEMBRO',        2),
+  (25, 'Pedro',             'Vera',               'MIEMBRO',        2),
+  (26, 'Cristofer',         'Coyocusi',           'MIEMBRO',        2),
+  (27, 'Roger',             'Caceres',            'MIEMBRO',        2),
+  (28, 'Wilder',            'Gutierrez',          'MIEMBRO',        2),
+  (29, 'Tulio',             'Valentin',           'MIEMBRO',        2),
+
+  -- GRUPO 3 (Miembros)
+  (30, 'Nestor',            'Janampa',            'LIDER_CAPITAN',  3),
+  (31, 'Froilan',           'Rojas',              'LIDER_ALTERNO',  3),
+  (32, 'Danny',             'Berrocal',           'MIEMBRO',        3),
+  (33, 'Cesar',             'Chero',              'MIEMBRO',        3),
+  (34, 'Luis Enrique',      '',                   'MIEMBRO',        3),
+  (35, 'Miguel',            'Janampa',            'MIEMBRO',        3),
+  (36, 'Melecio',           'Benites',            'MIEMBRO',        3),
+  (37, 'Dereck',            '',                   'MIEMBRO',        3),
+  (38, 'Caleb',             'Toribio',            'MIEMBRO',        3),
+
+  -- GRUPO 4 (Miembros)
+  (40, 'Jesus',             'Yauri',              'LIDER_CAPITAN',  4),
+  (41, 'Cristian',          'Vega',               'LIDER_ALTERNO',  4),
+  (42, 'Mariano',           'Espinoza',           'MIEMBRO',        4),
+  (43, 'Viker',             'Ponce',              'MIEMBRO',        4),
+  (44, 'Alexander',         'Reyes',              'MIEMBRO',        4),
+  (45, 'Cesar',             'Sanchez',            'MIEMBRO',        4),
+  (46, 'Jose Luiz',         '',                   'MIEMBRO',        4),
+  (47, 'Wilder',            'Kaqui',              'MIEMBRO',        4),
+  (48, 'Juan',              'Fernandez',          'MIEMBRO',        4),
+
+  -- GRUPO 5 (Doctrina - Aspirantes)
+  (50, 'Juan',              'Anahua',             'LIDER_CAPITAN',  5),
+  (51, 'Jeampier',          '',                   'LIDER_ALTERNO',  5),
+  (52, 'Crithian',          'Alegre Palomino',    'ASPIRANTE',      5),
+  (53, 'Jhon',              'Mallqui',            'ASPIRANTE',      5),
+  (54, 'Claudio',           'Anchita',            'ASPIRANTE',      5),
+  (55, 'David',             'Minaya',             'ASPIRANTE',      5),
+  (56, 'Oscar',             'Santiago',           'ASPIRANTE',      5),
+  (57, 'Edwin',             'Vejar',              'ASPIRANTE',      5),
+  (58, 'Amadeo',            'Pineda',             'ASPIRANTE',      5),
+  (59, 'Jorge',             'Benites Hidalgo',    'ASPIRANTE',      5),
+
+  -- GRUPO 6 (Doctrina - Aspirantes)
+  (60, 'Raul',              'Parra',              'LIDER_CAPITAN',  6),
+  (61, 'Felix',             'Ramos',              'LIDER_ALTERNO',  6),
+  (62, 'Italo',             'Tamayo',             'ASPIRANTE',      6),
+  (63, 'Miguel',            'Lopez',              'ASPIRANTE',      6),
+  (64, 'Ronny',             'Murrugarae',         'ASPIRANTE',      6),
+  (65, 'Juan',              'De Dios',            'ASPIRANTE',      6),
+  (66, 'Diego',             'Carrera',            'ASPIRANTE',      6),
+  (67, 'Josue',             'Cordova',            'ASPIRANTE',      6),
+  (68, 'Manuel',            'Acosta',             'ASPIRANTE',      6),
+
+  -- GRUPO 7 (Doctrina - Aspirantes)
+  (70, 'Leonel',            'Quispe',             'LIDER_CAPITAN',  7),
+  (71, 'Josue',             'Estrada',            'LIDER_ALTERNO',  7),
+  (72, 'Harry',             'Santiago',           'ASPIRANTE',      7),
+  (73, 'Nilton',            'Huaman',             'ASPIRANTE',      7),
+  (74, 'Jose Joni',         'Chavez',             'ASPIRANTE',      7),
+  (75, 'Elias',             'Vega',               'ASPIRANTE',      7),
+  (76, 'Yaret',             'Urtado',             'ASPIRANTE',      7),
+  (77, 'Joset',             'Luna',               'ASPIRANTE',      7),
+  (78, 'Homer',             'Yauri',              'ASPIRANTE',      7),
+  (79, 'David',             'Rosa',               'ASPIRANTE',      7),
+
+  -- GRUPO 12 (Miembros)
+  (120, 'Edith',            'Huallpa',            'LIDER_CAPITAN', 12),
+  (121, 'Melany',           'Rosales',            'LIDER_ALTERNO', 12),
+  (122, 'Raquel',           'Ramos',              'MIEMBRO',       12),
+  (123, 'Ruth',             'Caruhapoma',         'MIEMBRO',       12),
+  (124, 'Ruth',             'Yance',              'MIEMBRO',       12),
+  (125, 'Flor',             'Cabezas',            'MIEMBRO',       12),
+  (126, 'Ruth',             'Huaman',             'MIEMBRO',       12),
+  (127, 'Ana',              'Pacheco',            'MIEMBRO',       12),
+  (128, 'Katy',             'Vera',               'MIEMBRO',       12),
+  (129, 'Nancy',            'Chihuan',            'MIEMBRO',       12),
+  (130, 'Ruth',             'Sotil',              'MIEMBRO',       12),
+  (131, 'Lesly',            'De La Cruz',         'MIEMBRO',       12),
+
+  -- GRUPO 13 (Miembros)
+  (140, 'Naldy',            'Delgadillo',         'LIDER_CAPITAN', 13),
+  (141, 'Deysi',            'Quilca',             'LIDER_ALTERNO', 13),
+  (142, 'Susan',            'Vasquez',            'MIEMBRO',       13),
+  (143, 'Elizabeth',        'Llamoca',            'MIEMBRO',       13),
+  (144, 'Betsabe',          'Arone',              'MIEMBRO',       13),
+  (145, 'Liliana',          'Valverde',           'MIEMBRO',       13),
+  (146, 'Yashira',          'Trujillo',           'MIEMBRO',       13),
+  (147, 'Violeta',          'Perez',              'MIEMBRO',       13),
+  (148, 'Lourdes',          'Manuyama',           'MIEMBRO',       13),
+  (149, 'Xiomara',          'Alvarez',            'MIEMBRO',       13),
+  (150, 'Ester',            'Mamani',             'MIEMBRO',       13),
+  (151, 'Liz',              'Achic',              'MIEMBRO',       13),
+  (152, 'Flor',             'Pumacayo',           'MIEMBRO',       13),
+
+  -- GRUPO 14 (Miembros)
+  (160, 'Brisaida',         'Huaman',             'LIDER_CAPITAN', 14),
+  (161, 'Eliana',           'Herrera',            'LIDER_ALTERNO', 14),
+  (162, 'Angie',            'Quilla',             'MIEMBRO',       14),
+  (163, 'Marina',           'Sulca',              'MIEMBRO',       14),
+  (164, 'Dayana',           'Quispe',             'MIEMBRO',       14),
+  (165, 'Vilma',            'Hugarte',            'MIEMBRO',       14),
+  (166, 'Jesenia',          'Alvarado',           'MIEMBRO',       14),
+  (167, 'Benerenice',       'Colan',              'MIEMBRO',       14),
+  (168, 'Jessica',          'Apaza',              'MIEMBRO',       14),
+  (169, 'Claudia',          'Zoto',               'MIEMBRO',       14),
+  (170, 'Arelli',           'Comun',              'MIEMBRO',       14),
+
+  -- GRUPO 15 (Miembros)
+  (180, 'Sheyla',           'Quispe',             'LIDER_CAPITAN', 15),
+  (181, 'Genesis',          'Ronceros',           'LIDER_ALTERNO', 15),
+  (182, 'Leolina',          'Moreno',             'MIEMBRO',       15),
+  (183, 'Raquel',           'Rosales',            'MIEMBRO',       15),
+  (184, 'Maricruz',         'Quispe',             'MIEMBRO',       15),
+  (185, 'Shesira',          'Urcos',              'MIEMBRO',       15),
+  (186, 'Sara',             'Farfan',             'MIEMBRO',       15),
+  (187, 'Jema',             'Borja',              'MIEMBRO',       15),
+  (188, 'Brenda',           'Bacillo',            'MIEMBRO',       15),
+  (189, 'Yulisa',           '',                   'MIEMBRO',       15),
+  (190, 'Susana',           'De La Cruz',         'MIEMBRO',       15),
+
+  -- GRUPO 16 (Miembros)
+  (200, 'Karen',            'Manuyama',           'LIDER_CAPITAN', 16),
+  (201, 'Yuly',             'Huaman',             'LIDER_ALTERNO', 16),
+  (202, 'Ruth',             'Bravo',              'MIEMBRO',       16),
+  (203, 'Maria',            'Gonzales',           'MIEMBRO',       16),
+  (204, 'Arely',            'Minaya',             'MIEMBRO',       16),
+  (205, 'Lucero',           'Espinoza',           'MIEMBRO',       16),
+  (206, 'Kiara',            'Flores',             'MIEMBRO',       16),
+  (207, 'Fiorella',         '',                   'MIEMBRO',       16),
+  (208, 'Pamela',           'Janampa',            'MIEMBRO',       16),
+  (209, 'Paola',            'Gamonal',            'MIEMBRO',       16),
+  (210, 'Keyla',            'Zotelo',             'MIEMBRO',       16),
+  (211, 'Nayeli',           '(Nueva)',            'MIEMBRO',       16),
+  (212, 'Gina',             '(Nueva)',            'MIEMBRO',       16),
+  (213, 'Damaris',          'Mosombite',          'MIEMBRO',       16),
+
+  -- GRUPO 17 (Miembros)
+  (220, 'Noemi',            'Huaman',             'LIDER_CAPITAN', 17),
+  (221, 'Flor',             'Figueroa',           'LIDER_ALTERNO', 17),
+  (222, 'Lucero',           'Cabello',            'MIEMBRO',       17),
+  (223, 'Natali',           'Luna',               'MIEMBRO',       17),
+  (224, 'Shirley',          'Pimentel',           'MIEMBRO',       17),
+  (225, 'Ana',              'Taipe',              'MIEMBRO',       17),
+  (226, 'Jenny',            'Olortogui',          'MIEMBRO',       17),
+  (227, 'Jackelin',         'Abbia',              'MIEMBRO',       17),
+  (228, 'Erika',            'Perez',              'MIEMBRO',       17),
+  (229, 'Maira',            'Salcedo',            'MIEMBRO',       17),
+  (230, 'Nair',             'Furant',             'MIEMBRO',       17),
+  (231, 'Damaris Karen',    '',                   'MIEMBRO',       17),
+  (232, 'Marlene',          '',                   'MIEMBRO',       17),
+
+  -- GRUPO 18 (Miembros)
+  (240, 'Bethy',            'Llanco',             'LIDER_CAPITAN', 18),
+  (241, 'Lucero',           'Guevara',            'LIDER_ALTERNO', 18),
+  (242, 'Gemaly',           'Minaya',             'MIEMBRO',       18),
+  (243, 'Angie',            'Balcazar',           'MIEMBRO',       18),
+  (244, 'Lourdes',          'Silva',              'MIEMBRO',       18),
+  (245, 'Nayda',            'Cruz',               'MIEMBRO',       18),
+  (246, 'Liz',              'Quevedo',            'MIEMBRO',       18),
+  (247, 'Fiorela',          'Beruf',              'MIEMBRO',       18),
+  (248, 'Abigail',          'Ortiz',              'MIEMBRO',       18),
+  (249, 'Yuli',             '',                   'MIEMBRO',       18),
+  (250, 'Aidita',           'Rubio',              'MIEMBRO',       18),
+  (251, 'Maria',            'Ortega',             'MIEMBRO',       18),
+  (252, 'Rina',             'Jimenez',            'MIEMBRO',       18),
+  (253, 'Cinthia',          'Caballero',          'MIEMBRO',       18),
+
+  -- GRUPO 19 (Doctrina - Aspirantes)
+  -- Nota: Elizabeth Yauri ahora es Líder Alterna de este grupo (trasladada del Grupo 12)
+  (260, 'Elizabeth',        'Caceres',            'LIDER_CAPITAN', 19),
+  (261, 'Elizabeth',        'Yauri',              'LIDER_ALTERNO', 19),
+  (262, 'Maryory',          'Dario',              'ASPIRANTE',     19),
+  (263, 'Xiomara',          'Flores',             'ASPIRANTE',     19),
+  (264, 'Xiomara',          'Saavedra',           'ASPIRANTE',     19),
+  (265, 'Jimena',           'Meneses',            'ASPIRANTE',     19),
+  (266, 'Matilde',          'Zapana',             'ASPIRANTE',     19),
+  (267, 'Ruth',             'Tantaraqui',         'ASPIRANTE',     19),
+  (268, 'Rebeca',           'De La Cruz',         'ASPIRANTE',     19),
+  (269, 'Freilemar',        'Lopez',              'ASPIRANTE',     19),
+  (270, 'Melany',           'Puente Ortiz',       'ASPIRANTE',     19),
+  (271, 'Pricila',          'Cordoba',            'ASPIRANTE',     19),
+  (272, 'Katerine',         '',                   'ASPIRANTE',     19),
+  (273, 'Margorit',         'Urive',              'ASPIRANTE',     19),
+  (274, 'Raquel',           'Cordova',            'ASPIRANTE',     19),
+  (275, 'Elizabeth',        'Mosombite',          'ASPIRANTE',     19),
+
+  -- GRUPO 20 (Doctrina - Aspirantes)
+  (280, 'Magdalena',        'Villam',             'LIDER_CAPITAN', 20),
+  (281, 'Leydi',            'Varillas',           'LIDER_ALTERNO', 20),
+  (282, 'Debora',           'Neciosup',           'ASPIRANTE',     20),
+  (283, 'Sarai',            'Pumacayo',           'ASPIRANTE',     20),
+  (284, 'Andrea',           'Aquino',             'ASPIRANTE',     20),
+  (285, 'Belen',            'Mendoza',            'ASPIRANTE',     20),
+  (286, 'Damaris',          'Abarca',             'ASPIRANTE',     20),
+  (287, 'Ruth',             'Valenzuela',         'ASPIRANTE',     20),
+  (288, 'Dafnely',          'Bornas Del Campo',   'ASPIRANTE',     20),
+  (289, 'Ana Rebeca',       'De Paz',             'ASPIRANTE',     20),
+  (290, 'Janeth',           'Nivin',              'ASPIRANTE',     20),
+  (291, 'Rebeca',           'Mamani',             'ASPIRANTE',     20),
+  (292, 'Maira',            'Mandujan',           'ASPIRANTE',     20),
+  (293, 'Abigail',          'Guevara',            'ASPIRANTE',     20),
+  (294, 'Paola Rebeca',     'Huaman',             'ASPIRANTE',     20)
+) AS tmp(id, nombres, apellidos, rol, numero_grupo)
+WHERE NOT EXISTS (SELECT 1 FROM persona WHERE persona.id = tmp.id);
+
+-- Reiniciar la secuencia de ID para nuevos registros agregados manualmente
+ALTER TABLE persona ALTER COLUMN id RESTART WITH 1000;
