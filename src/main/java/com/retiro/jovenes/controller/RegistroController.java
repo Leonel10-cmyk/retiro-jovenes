@@ -39,12 +39,12 @@ public class RegistroController {
 
     @PostMapping("/registro")
     public String registrar(@RequestParam(defaultValue = "CANTO_GRANDE") Registro.Iglesia iglesia,
-                            @RequestParam Long personaId,
-                            @RequestParam Registro.Modalidad modalidad,
-                            @RequestParam Registro.MedioPago medioPago,
-                            @RequestParam(defaultValue = "TOTAL") String tipoPago,
-                            @RequestParam(required = false) Integer montoAdelanto,
-                            RedirectAttributes redirectAttributes) {
+            @RequestParam Long personaId,
+            @RequestParam Registro.Modalidad modalidad,
+            @RequestParam Registro.MedioPago medioPago,
+            @RequestParam(defaultValue = "TOTAL") String tipoPago,
+            @RequestParam(required = false) Integer montoAdelanto,
+            RedirectAttributes redirectAttributes) {
         if (registroService.yaRegistrado(personaId)) {
             redirectAttributes.addFlashAttribute("error", "Esta persona ya está registrada.");
             return "redirect:/registro";
@@ -78,9 +78,11 @@ public class RegistroController {
 
         String detalle = registro.isPagoCompleto()
                 ? " (Pago Completo)"
-                : " (1° Pago / Adelanto S/ " + registro.getMontoPagado() + ", Saldo: S/ " + registro.getSaldoPendiente() + ")";
+                : " (1° Pago / Adelanto S/ " + registro.getMontoPagado() + ", Saldo: S/ " + registro.getSaldoPendiente()
+                        + ")";
         redirectAttributes.addFlashAttribute("success",
-                "¡" + persona.get().getNombreCompleto() + " registrado exitosamente en " + iglesia.getDisplayName() + detalle + "!");
+                "¡" + persona.get().getNombreCompleto() + " registrado exitosamente en " + iglesia.getDisplayName()
+                        + detalle + "!");
         return "redirect:/crud";
     }
 
@@ -92,12 +94,17 @@ public class RegistroController {
         long cantCompletos = registros.stream().filter(Registro::isPagoCompleto).count();
         long cantAdelantos = registros.stream().filter(r -> !r.isPagoCompleto()).count();
 
-        long cantJuevesSabado = registros.stream().filter(r -> r.getModalidad() == Registro.Modalidad.JUEVES_SABADO).count();
-        long cantMiercolesSabado = registros.stream().filter(r -> r.getModalidad() == Registro.Modalidad.MIERCOLES_SABADO).count();
-        long cantSoloViernes = registros.stream().filter(r -> r.getModalidad() == Registro.Modalidad.SOLO_VIERNES).count();
+        long cantJuevesSabado = registros.stream().filter(r -> r.getModalidad() == Registro.Modalidad.JUEVES_SABADO)
+                .count();
+        long cantMiercolesSabado = registros.stream()
+                .filter(r -> r.getModalidad() == Registro.Modalidad.MIERCOLES_SABADO).count();
+        long cantSoloViernes = registros.stream().filter(r -> r.getModalidad() == Registro.Modalidad.SOLO_VIERNES)
+                .count();
 
-        int totalYapePlin = registros.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.YAPE_PLIN).mapToInt(Registro::getMontoPagado).sum();
-        int totalEfectivo = registros.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.EFECTIVO).mapToInt(Registro::getMontoPagado).sum();
+        int totalYapePlin = registros.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.YAPE_PLIN)
+                .mapToInt(Registro::getMontoPagado).sum();
+        int totalEfectivo = registros.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.EFECTIVO)
+                .mapToInt(Registro::getMontoPagado).sum();
         long cantYapePlin = registros.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.YAPE_PLIN).count();
         long cantEfectivo = registros.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.EFECTIVO).count();
 
@@ -120,15 +127,16 @@ public class RegistroController {
 
     @PostMapping("/crud/abonar/{id}")
     public String registrarAbono(@PathVariable Long id,
-                                 @RequestParam int montoAbono,
-                                 @RequestParam Registro.MedioPago medioPago,
-                                 RedirectAttributes redirectAttributes) {
+            @RequestParam int montoAbono,
+            @RequestParam Registro.MedioPago medioPago,
+            RedirectAttributes redirectAttributes) {
         Optional<Registro> registroOpt = registroService.findById(id);
         if (registroOpt.isPresent()) {
             Registro r = registroOpt.get();
             int sigPago = r.getSiguienteNumeroPago();
             if (sigPago == 0) {
-                redirectAttributes.addFlashAttribute("error", "Ya se registraron los 3 pagos permitidos para este asistente.");
+                redirectAttributes.addFlashAttribute("error",
+                        "Ya se registraron los 3 pagos permitidos para este asistente.");
                 return "redirect:/crud";
             }
             if (montoAbono <= 0) {
@@ -137,22 +145,24 @@ public class RegistroController {
             }
             registroService.registrarAbono(id, montoAbono, medioPago);
             redirectAttributes.addFlashAttribute("success",
-                    "¡" + sigPago + "° Pago de S/ " + montoAbono + " (" + medioPago.getDisplayName() + ") registrado correctamente para " + r.getPersona().getNombreCompleto() + "!");
+                    "¡" + sigPago + "° Pago de S/ " + montoAbono + " (" + medioPago.getDisplayName()
+                            + ") registrado correctamente para " + r.getPersona().getNombreCompleto() + "!");
         }
         return "redirect:/crud";
     }
 
     @PostMapping("/crud/completar-pago/{id}")
     public String completarPago(@PathVariable Long id,
-                                @RequestParam(required = false) Registro.MedioPago medioPago,
-                                RedirectAttributes redirectAttributes) {
+            @RequestParam(required = false) Registro.MedioPago medioPago,
+            RedirectAttributes redirectAttributes) {
         Optional<Registro> registroOpt = registroService.findById(id);
         if (registroOpt.isPresent()) {
             Registro r = registroOpt.get();
             int saldo = r.getSaldoPendiente();
             registroService.completarPago(id, medioPago != null ? medioPago : r.getMedioPago());
             redirectAttributes.addFlashAttribute("success", "¡Pago de " + r.getPersona().getNombreCompleto()
-                    + " actualizado a PAGO COMPLETO (S/ " + saldo + " cancelados)! Total: S/ " + r.getModalidad().getPrecio());
+                    + " actualizado a PAGO COMPLETO (S/ " + saldo + " cancelados)! Total: S/ "
+                    + r.getModalidad().getPrecio());
         }
         return "redirect:/crud";
     }
@@ -172,15 +182,15 @@ public class RegistroController {
 
     @PostMapping("/crud/editar/{id}")
     public String editar(@PathVariable Long id,
-                         @RequestParam(defaultValue = "CANTO_GRANDE") Registro.Iglesia iglesia,
-                         @RequestParam Registro.Modalidad modalidad,
-                         @RequestParam(required = false) Integer montoPago1,
-                         @RequestParam(required = false) Registro.MedioPago medioPago1,
-                         @RequestParam(required = false) Integer montoPago2,
-                         @RequestParam(required = false) Registro.MedioPago medioPago2,
-                         @RequestParam(required = false) Integer montoPago3,
-                         @RequestParam(required = false) Registro.MedioPago medioPago3,
-                         RedirectAttributes redirectAttributes) {
+            @RequestParam(defaultValue = "CANTO_GRANDE") Registro.Iglesia iglesia,
+            @RequestParam Registro.Modalidad modalidad,
+            @RequestParam(required = false) Integer montoPago1,
+            @RequestParam(required = false) Registro.MedioPago medioPago1,
+            @RequestParam(required = false) Integer montoPago2,
+            @RequestParam(required = false) Registro.MedioPago medioPago2,
+            @RequestParam(required = false) Integer montoPago3,
+            @RequestParam(required = false) Registro.MedioPago medioPago3,
+            RedirectAttributes redirectAttributes) {
         Optional<Registro> registroOpt = registroService.findById(id);
         if (registroOpt.isEmpty())
             return "redirect:/crud";
@@ -191,7 +201,8 @@ public class RegistroController {
 
         if (montoPago1 != null && montoPago1 > 0) {
             registro.setMontoPago1(montoPago1);
-            if (medioPago1 != null) registro.setMedioPago1(medioPago1);
+            if (medioPago1 != null)
+                registro.setMedioPago1(medioPago1);
         }
         registro.setMontoPago2(montoPago2 != null && montoPago2 > 0 ? montoPago2 : null);
         registro.setMedioPago2(montoPago2 != null && montoPago2 > 0 ? medioPago2 : null);
@@ -212,5 +223,13 @@ public class RegistroController {
         registroService.deleteById(id);
         redirectAttributes.addFlashAttribute("success", "Registro eliminado.");
         return "redirect:/crud";
-    }
-}
+    }}
+
+    
+    
+    
+    
+    
+    
+    
+                

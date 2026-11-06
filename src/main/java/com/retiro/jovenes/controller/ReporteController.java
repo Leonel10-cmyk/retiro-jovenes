@@ -30,8 +30,8 @@ public class ReporteController {
 
     @GetMapping
     public String verReporte(@RequestParam(required = false) Integer grupo,
-                             @RequestParam(required = false) Registro.Iglesia iglesia,
-                             Model model) {
+            @RequestParam(required = false) Registro.Iglesia iglesia,
+            Model model) {
         List<Persona> todasPersonas = personaRepository.findAllByOrderByNumeroGrupoAscNombresAsc();
         List<Registro> todosRegistros = registroRepository.findAllWithPersona();
 
@@ -55,15 +55,22 @@ public class ReporteController {
         long cantCompletos = registrosFiltrados.stream().filter(Registro::isPagoCompleto).count();
         long cantAdelantos = registrosFiltrados.stream().filter(r -> !r.isPagoCompleto()).count();
 
-        long cantYapePlin = registrosFiltrados.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.YAPE_PLIN).count();
-        int totalYapePlin = registrosFiltrados.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.YAPE_PLIN).mapToInt(Registro::getMontoPagado).sum();
+        long cantYapePlin = registrosFiltrados.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.YAPE_PLIN)
+                .count();
+        int totalYapePlin = registrosFiltrados.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.YAPE_PLIN)
+                .mapToInt(Registro::getMontoPagado).sum();
 
-        long cantEfectivo = registrosFiltrados.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.EFECTIVO).count();
-        int totalEfectivo = registrosFiltrados.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.EFECTIVO).mapToInt(Registro::getMontoPagado).sum();
+        long cantEfectivo = registrosFiltrados.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.EFECTIVO)
+                .count();
+        int totalEfectivo = registrosFiltrados.stream().filter(r -> r.getMedioPago() == Registro.MedioPago.EFECTIVO)
+                .mapToInt(Registro::getMontoPagado).sum();
 
-        long cantMiercolesSabado = registrosFiltrados.stream().filter(r -> r.getModalidad() == Registro.Modalidad.MIERCOLES_SABADO).count();
-        long cantJuevesSabado = registrosFiltrados.stream().filter(r -> r.getModalidad() == Registro.Modalidad.JUEVES_SABADO).count();
-        long cantSoloViernes = registrosFiltrados.stream().filter(r -> r.getModalidad() == Registro.Modalidad.SOLO_VIERNES).count();
+        long cantMiercolesSabado = registrosFiltrados.stream()
+                .filter(r -> r.getModalidad() == Registro.Modalidad.MIERCOLES_SABADO).count();
+        long cantJuevesSabado = registrosFiltrados.stream()
+                .filter(r -> r.getModalidad() == Registro.Modalidad.JUEVES_SABADO).count();
+        long cantSoloViernes = registrosFiltrados.stream()
+                .filter(r -> r.getModalidad() == Registro.Modalidad.SOLO_VIERNES).count();
 
         model.addAttribute("grupos", grupos);
         model.addAttribute("iglesias", Registro.Iglesia.values());
@@ -88,8 +95,8 @@ public class ReporteController {
 
     @GetMapping("/exportar-csv")
     public void exportarCsv(@RequestParam(required = false) Integer grupo,
-                            @RequestParam(required = false) Registro.Iglesia iglesia,
-                            HttpServletResponse response) throws IOException {
+            @RequestParam(required = false) Registro.Iglesia iglesia,
+            HttpServletResponse response) throws IOException {
         List<Registro> todosRegistros = registroRepository.findAllWithPersona();
 
         List<Registro> registrosFiltrados = todosRegistros.stream()
@@ -110,16 +117,19 @@ public class ReporteController {
         PrintWriter writer = response.getWriter();
         // BOM for Excel UTF-8 compatibility
         writer.write('\uFEFF');
-        writer.println("N°,Iglesia,Grupo,Nombres,Apellidos,Rol,Modalidad,1° Pago (S/),2° Pago (S/),3° Pago (S/),Total Pagado (S/),Saldo Pendiente (S/),Estado de Pago,Fecha de Registro");
+        writer.println(
+                "N°,Iglesia,Grupo,Nombres,Apellidos,Rol,Modalidad,1° Pago (S/),2° Pago (S/),3° Pago (S/),Total Pagado (S/),Saldo Pendiente (S/),Estado de Pago,Fecha de Registro");
 
         int index = 1;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         for (Registro r : registrosFiltrados) {
             Persona p = r.getPersona();
-            String estadoPago = r.isPagoCompleto() ? "PAGO COMPLETO" : "ADELANTO (Resta S/ " + r.getSaldoPendiente() + ")";
+            String estadoPago = r.isPagoCompleto() ? "PAGO COMPLETO"
+                    : "ADELANTO (Resta S/ " + r.getSaldoPendiente() + ")";
             String modalidad = r.getModalidad().getDisplayName();
             String iglesiaNombre = (r.getIglesia() != null) ? r.getIglesia().getDisplayName() : "Canto Grande";
-            int p1 = (r.getMontoPago1() != null) ? r.getMontoPago1() : (r.getMontoPagado() != null ? r.getMontoPagado() : 0);
+            int p1 = (r.getMontoPago1() != null) ? r.getMontoPago1()
+                    : (r.getMontoPagado() != null ? r.getMontoPagado() : 0);
             String p2 = (r.getMontoPago2() != null && r.getMontoPago2() > 0) ? String.valueOf(r.getMontoPago2()) : "-";
             String p3 = (r.getMontoPago3() != null && r.getMontoPago3() > 0) ? String.valueOf(r.getMontoPago3()) : "-";
             int total = r.getMontoPagado();
@@ -140,8 +150,7 @@ public class ReporteController {
                     total,
                     saldo,
                     estadoPago,
-                    fecha
-            );
+                    fecha);
         }
         writer.flush();
     }
