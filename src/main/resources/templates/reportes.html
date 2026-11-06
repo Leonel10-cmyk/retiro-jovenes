@@ -3,11 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reportes por Grupo - Retiro Jóvenes 2026</title>
+    <title>Reportes por Grupo e Iglesia - Retiro Jóvenes 2026</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <style>
+        .badge-iglesia {
+            background: #fdf2f8;
+            color: #9d174d;
+            border: 1px solid #fbcfe8;
+            padding: 0.3rem 0.65rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        .pago-pill {
+            display: inline-block;
+            font-size: 0.72rem;
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            margin: 1px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
         .badge-estado-REGISTRADO {
             background: linear-gradient(135deg, #198754, #20c997);
             color: white;
@@ -46,7 +68,7 @@
                 padding: 0 !important;
                 background: white !important;
                 color: #000 !important;
-                font-size: 9pt !important;
+                font-size: 8.5pt !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
@@ -71,15 +93,6 @@
                 overflow: visible !important;
             }
 
-            .card-header {
-                background: #5C3A00 !important;
-                color: white !important;
-                font-size: 10pt !important;
-                padding: 6px 10px !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
             .table-responsive {
                 overflow: visible !important;
                 display: block !important;
@@ -89,7 +102,7 @@
             .table-retiro {
                 width: 100% !important;
                 table-layout: auto !important;
-                font-size: 8.5pt !important;
+                font-size: 8pt !important;
                 border-collapse: collapse !important;
                 margin: 0 !important;
             }
@@ -100,16 +113,16 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 padding: 5px 6px !important;
-                font-size: 8.5pt !important;
+                font-size: 8pt !important;
                 border: 1px solid #442a00 !important;
                 white-space: nowrap !important;
                 text-align: center !important;
             }
 
             .table-retiro tbody td {
-                padding: 4px 6px !important;
+                padding: 4px 5px !important;
                 border: 1px solid #ccc !important;
-                font-size: 8pt !important;
+                font-size: 7.5pt !important;
                 vertical-align: middle !important;
             }
 
@@ -117,11 +130,11 @@
                 display: none !important;
             }
 
-            .badge-rol, .badge-grupo, .badge-pago, .badge-estado-REGISTRADO, .badge-estado-PENDIENTE, .badge {
+            .badge-rol, .badge-grupo, .badge-pago, .badge-estado-REGISTRADO, .badge-estado-PENDIENTE, .badge, .badge-iglesia {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                padding: 2px 6px !important;
-                font-size: 7.5pt !important;
+                padding: 2px 5px !important;
+                font-size: 7pt !important;
                 border-radius: 6px !important;
                 white-space: nowrap !important;
                 display: inline-block !important;
@@ -178,8 +191,8 @@
 
     <!-- HERO -->
     <div class="hero-header no-print" style="padding: 1.5rem 1rem;">
-        <h1 style="font-size:1.4rem;"><i class="bi bi-file-earmark-bar-graph-fill"></i> Reportes de Inscritos por Grupo</h1>
-        <p>Listado exclusivo de jóvenes inscritos con pago completo o adelanto</p>
+        <h1 style="font-size:1.4rem;"><i class="bi bi-file-earmark-bar-graph-fill"></i> Reportes de Inscritos por Grupo e Iglesia</h1>
+        <p>Listado exclusivo de jóvenes inscritos con control de abonos y saldos</p>
     </div>
 
     <!-- PRINT ONLY HEADER (Visible al imprimir o guardar en PDF) -->
@@ -189,8 +202,10 @@
                 <h4 style="margin:0; font-weight:900; color:#5C3A00; text-transform:uppercase; font-size:13pt;">
                     II RETIRO PRESBITERIAL DE JÓVENES &bull; VOLVAMOS A DIOS
                 </h4>
-                <div style="font-size:10.5pt; font-weight:700; color:#8B6013;"
-                     th:text="${grupoSeleccionado == 0 ? 'REPORTE GENERAL DE ASISTENTES INSCRITOS (TODOS LOS GRUPOS)' : 'REPORTE DE ASISTENTES INSCRITOS - GRUPO ' + grupoSeleccionado}">
+                <div style="font-size:10.5pt; font-weight:700; color:#8B6013;">
+                    <span th:text="${iglesiaSeleccionada != null ? iglesiaSeleccionada.displayName : 'TODAS LAS IGLESIAS'}"></span>
+                    &bull;
+                    <span th:text="${grupoSeleccionado == 0 ? 'TODOS LOS GRUPOS' : 'GRUPO ' + grupoSeleccionado}"></span>
                 </div>
                 <div style="font-size:8pt; color:#666;">
                     Casa de Retiros Bethel - Pachacámac &bull; Canto Grande
@@ -213,16 +228,17 @@
         </div>
     </div>
 
-    <div class="container-fluid px-3 px-xl-5 py-4" style="max-width: 1600px;">
+    <div class="container-fluid px-3 px-xl-5 py-4" style="max-width: 1650px;">
         <!-- FILTER BAR -->
         <div class="card-retiro p-3 mb-4 no-print">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-5">
-                    <label class="fw-bold mb-1" style="color:var(--marron-profundo);">
-                        <i class="bi bi-funnel-fill" style="color:var(--dorado-principal);"></i> Seleccionar Grupo:
+            <div class="row g-3 align-items-end">
+                <!-- Filtro Grupo -->
+                <div class="col-md-3">
+                    <label class="fw-bold mb-1" style="color:var(--marron-profundo); font-size:0.9rem;">
+                        <i class="bi bi-people-fill" style="color:var(--dorado-principal);"></i> Filtrar por Grupo:
                     </label>
-                    <select id="selectGrupo" class="form-select" style="border-radius:10px; border:2px solid var(--dorado-principal); font-weight:700;" onchange="cambiarGrupo(this.value)">
-                        <option value="0" th:selected="${grupoSeleccionado == 0}">🌟 Todos los Grupos (General)</option>
+                    <select id="selectGrupo" class="form-select form-select-sm" style="border-radius:10px; border:2px solid var(--dorado-principal); font-weight:700;" onchange="aplicarFiltros()">
+                        <option value="0" th:selected="${grupoSeleccionado == 0}">🌟 Todos los Grupos</option>
                         <option th:each="g : ${grupos}"
                                 th:value="${g}"
                                 th:text="'Grupo ' + ${g}"
@@ -230,11 +246,26 @@
                     </select>
                 </div>
 
-                <div class="col-md-7 d-flex justify-content-md-end gap-2 align-items-end flex-wrap">
-                    <button class="btn btn-dorado" onclick="window.print()">
+                <!-- Filtro Iglesia -->
+                <div class="col-md-4">
+                    <label class="fw-bold mb-1" style="color:var(--marron-profundo); font-size:0.9rem;">
+                        <i class="bi bi-buildings-fill" style="color:var(--dorado-principal);"></i> Filtrar por Iglesia:
+                    </label>
+                    <select id="selectIglesia" class="form-select form-select-sm" style="border-radius:10px; border:2px solid var(--dorado-principal); font-weight:700;" onchange="aplicarFiltros()">
+                        <option value="" th:selected="${iglesiaSeleccionada == null}">⛪ Todas las Iglesias</option>
+                        <option th:each="igl : ${iglesias}"
+                                th:value="${igl.name()}"
+                                th:text="${igl.displayName}"
+                                th:selected="${iglesiaSeleccionada != null and igl.name() == iglesiaSeleccionada.name()}"></option>
+                    </select>
+                </div>
+
+                <!-- Botones Accion -->
+                <div class="col-md-5 d-flex justify-content-md-end gap-2 align-items-end flex-wrap">
+                    <button class="btn btn-dorado btn-sm" onclick="window.print()">
                         <i class="bi bi-printer-fill"></i> Imprimir / Guardar PDF
                     </button>
-                    <a th:href="@{/reportes/exportar-csv(grupo=${grupoSeleccionado})}" class="btn btn-outline-dorado">
+                    <a id="btnCsv" th:href="@{/reportes/exportar-csv(grupo=${grupoSeleccionado}, iglesia=${iglesiaSeleccionada != null ? iglesiaSeleccionada.name() : ''})}" class="btn btn-outline-dorado btn-sm">
                         <i class="bi bi-file-earmark-excel"></i> Descargar CSV
                     </a>
                 </div>
@@ -295,11 +326,11 @@
             <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <div>
                     <i class="bi bi-list-check"></i>
-                    <span th:text="${grupoSeleccionado == 0 ? 'Listado de Todos los Jóvenes Inscritos' : 'Jóvenes Inscritos del Grupo ' + grupoSeleccionado}"></span>
+                    <span>Listado de Asistentes Inscritos</span>
                     <span class="badge bg-dark ms-2" th:text="${totalRegistrados} + ' inscritos'"></span>
                 </div>
                 <div class="no-print">
-                    <input type="text" id="reporteSearch" class="form-control form-control-sm" placeholder="🔍 Filtrar en este reporte..." style="width:220px; border-radius:8px;">
+                    <input type="text" id="reporteSearch" class="form-control form-control-sm" placeholder="🔍 Filtrar en este reporte..." style="width:230px; border-radius:8px;">
                 </div>
             </div>
             <div class="table-responsive">
@@ -307,11 +338,12 @@
                     <thead>
                         <tr>
                             <th style="width:35px; text-align:center;">#</th>
-                            <th style="min-width:180px;">Joven</th>
+                            <th style="min-width:170px;">Joven</th>
+                            <th style="white-space:nowrap; text-align:center;">Iglesia</th>
                             <th style="white-space:nowrap; text-align:center;">Rol</th>
                             <th style="white-space:nowrap; text-align:center;">Grupo</th>
                             <th style="white-space:nowrap;">Modalidad</th>
-                            <th style="white-space:nowrap; text-align:center;">Medio de Pago</th>
+                            <th style="white-space:nowrap; text-align:center;">Abonos (1°/2°/3°)</th>
                             <th style="white-space:nowrap; text-align:right;">Monto Pagado</th>
                             <th style="white-space:nowrap; text-align:right;">Saldo Pendiente</th>
                             <th style="white-space:nowrap; text-align:center;">Estado de Pago</th>
@@ -320,10 +352,10 @@
                     </thead>
                     <tbody id="reporteTableBody">
                         <tr th:if="${#lists.isEmpty(registros)}">
-                            <td colspan="10" class="text-center py-5 text-muted">
+                            <td colspan="11" class="text-center py-5 text-muted">
                                 <i class="bi bi-info-circle display-4 d-block mb-3" style="color:var(--dorado-principal); opacity:0.6;"></i>
-                                <h5 class="fw-bold">No hay personas inscritas aún</h5>
-                                <p class="mb-0" th:text="${grupoSeleccionado == 0 ? 'Todavía no se ha registrado ningún joven en el sistema.' : 'No hay jóvenes registrados en el Grupo ' + grupoSeleccionado + '.'}"></p>
+                                <h5 class="fw-bold">No hay personas inscritas bajo este filtro</h5>
+                                <p class="mb-0">Prueba cambiando el grupo o la iglesia seleccionada.</p>
                             </td>
                         </tr>
                         <tr th:each="r, stat : ${registros}">
@@ -336,6 +368,9 @@
                                 </div>
                             </td>
                             <td style="white-space:nowrap; text-align:center;">
+                                <span class="badge-iglesia" th:text="${r.iglesia != null ? r.iglesia.displayName : 'Iglesia Canto Grande'}"></span>
+                            </td>
+                            <td style="white-space:nowrap; text-align:center;">
                                 <span class="badge-rol"
                                       th:classappend="'badge-' + ${r.persona.rol.name()}"
                                       th:text="${r.persona.rol.displayName}"></span>
@@ -346,11 +381,22 @@
                             <td style="white-space:nowrap;">
                                 <span th:text="${r.modalidad.displayName}"></span>
                             </td>
+
+                            <!-- Historial de Abonos -->
                             <td style="white-space:nowrap; text-align:center;">
-                                <span class="badge-pago"
-                                      th:classappend="'badge-' + ${r.medioPago.name()}"
-                                      th:text="${r.medioPago.icono + ' ' + r.medioPago.displayName}"></span>
+                                <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                    <span class="pago-pill" th:if="${r.montoPago1 != null and r.montoPago1 > 0}">
+                                        1° S/ <strong th:text="${r.montoPago1}"></strong>
+                                    </span>
+                                    <span class="pago-pill" style="border-color:#93c5fd; background:#eff6ff;" th:if="${r.montoPago2 != null and r.montoPago2 > 0}">
+                                        2° S/ <strong th:text="${r.montoPago2}"></strong>
+                                    </span>
+                                    <span class="pago-pill" style="border-color:#86efac; background:#f0fdf4;" th:if="${r.montoPago3 != null and r.montoPago3 > 0}">
+                                        3° S/ <strong th:text="${r.montoPago3}"></strong>
+                                    </span>
+                                </div>
                             </td>
+
                             <td style="white-space:nowrap; text-align:right;">
                                 <strong style="color:var(--dorado-oscuro);" th:text="'S/ ' + ${r.montoPagado}"></strong>
                             </td>
@@ -380,14 +426,20 @@
 
     <!-- FOOTER -->
     <footer class="no-print">
-        <span>II Retiro Presbiterial de Jóvenes</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
+        <span>II Retiro Presbiterial de Jóvenes 2026</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/app.js"></script>
     <script>
-        function cambiarGrupo(grupo) {
-            window.location.href = '/reportes?grupo=' + grupo;
+        function aplicarFiltros() {
+            const grupo = document.getElementById('selectGrupo').value;
+            const iglesia = document.getElementById('selectIglesia').value;
+            let url = '/reportes?';
+            const params = [];
+            if (grupo && grupo > 0) params.push('grupo=' + grupo);
+            if (iglesia) params.push('iglesia=' + iglesia);
+            window.location.href = url + params.join('&');
         }
 
         const inputSearch = document.getElementById('reporteSearch');

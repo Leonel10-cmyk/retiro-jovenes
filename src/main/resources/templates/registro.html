@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - Retiro Jóvenes</title>
+    <title>Registro de Asistente - Retiro Jóvenes 2026</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
@@ -21,14 +21,10 @@
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav ms-auto gap-1 align-items-center">
                     <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house"></i> Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/registro"><i class="bi bi-person-plus"></i>
-                            Registrar</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/crud"><i class="bi bi-table"></i> Ver Registros</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="/personas"><i class="bi bi-people"></i> Padrón de
-                            Jóvenes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/reportes"><i
-                                class="bi bi-file-earmark-bar-graph"></i> Reportes</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/registro"><i class="bi bi-person-plus"></i> Registrar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/crud"><i class="bi bi-table"></i> Ver Registros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/personas"><i class="bi bi-people"></i> Padrón de Jóvenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/reportes"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a></li>
                     <li class="nav-item ms-lg-2">
                         <a href="/logout" class="btn btn-sm btn-outline-light" title="Cerrar Sesión">
                             <i class="bi bi-box-arrow-right"></i> Salir
@@ -41,11 +37,11 @@
 
     <!-- HERO -->
     <div class="hero-header" style="padding: 1.5rem 1rem;">
-        <h1 style="font-size:1.4rem;"><i class="bi bi-person-plus"></i> Registro de Asistente</h1>
-        <p>Busca el nombre del hermano para registrarlo</p>
+        <h1 style="font-size:1.4rem;"><i class="bi bi-person-plus-fill"></i> Registro de Asistente al Retiro</h1>
+        <p>Inscripción de hermanos por iglesia y modalidad de estadía</p>
     </div>
 
-    <div class="container py-4">
+    <div class="container py-4" style="max-width:760px;">
         <!-- Alert messages -->
         <div th:if="${error}" class="alert-retiro-error mb-3" role="alert">
             <i class="bi bi-exclamation-circle"></i> <span th:text="${error}"></span>
@@ -55,10 +51,33 @@
         </div>
 
         <form method="POST" action="/registro" id="registroForm">
+
+            <!-- STEP 0: Seleccionar Iglesia -->
+            <div class="card-retiro mb-4">
+                <div class="card-header">
+                    <i class="bi bi-buildings"></i> Paso 1: Iglesia de Procedencia
+                </div>
+                <div class="p-4">
+                    <label class="form-label fw-bold" style="color:var(--marron-profundo);">
+                        <i class="bi bi-geo-alt-fill" style="color:var(--dorado-principal);"></i> Selecciona la Iglesia a la que pertenece:
+                    </label>
+                    <select name="iglesia" id="selectIglesia" class="form-select form-select-lg"
+                            style="border-radius:12px; border:2px solid var(--dorado-principal); font-weight:700; color:var(--marron-profundo);">
+                        <option th:each="igl : ${iglesias}"
+                                th:value="${igl.name()}"
+                                th:text="${igl.displayName}"
+                                th:selected="${igl.name() == 'CANTO_GRANDE'}"></option>
+                    </select>
+                    <small class="text-muted mt-1 d-block">
+                        <i class="bi bi-info-circle"></i> Válido para las iglesias presbiteriales participantes del retiro.
+                    </small>
+                </div>
+            </div>
+
             <!-- STEP 1: Buscar persona -->
             <div class="card-retiro mb-4">
                 <div class="card-header">
-                    <i class="bi bi-search"></i> Paso 1: Buscar Hermano/a
+                    <i class="bi bi-search"></i> Paso 2: Buscar Hermano/a en el Padrón
                 </div>
                 <div class="p-4">
                     <div class="search-container mb-3">
@@ -77,7 +96,7 @@
             <!-- STEP 2: Modalidad -->
             <div class="card-retiro mb-4">
                 <div class="card-header">
-                    <i class="bi bi-calendar-check"></i> Paso 2: Seleccionar Modalidad
+                    <i class="bi bi-calendar-check"></i> Paso 3: Seleccionar Modalidad
                 </div>
                 <div class="p-4">
                     <div class="row g-3">
@@ -126,7 +145,7 @@
             <!-- STEP 3: Medio de pago -->
             <div class="card-retiro mb-4">
                 <div class="card-header">
-                    <i class="bi bi-credit-card"></i> Paso 3: Medio de Pago
+                    <i class="bi bi-credit-card"></i> Paso 4: Medio de Pago
                 </div>
                 <div class="p-4">
                     <div class="row g-3 justify-content-center">
@@ -162,13 +181,31 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- CAJA DE CÓDIGO QR YAPE (Aparece dinámicamente al seleccionar Yape) -->
+                    <div id="divQrYape" class="text-center mt-4 p-3 rounded-4"
+                         style="background: linear-gradient(135deg, #fbf2fd, #f0fbfb); border: 2px dashed #802688; max-width: 360px; margin: 1rem auto 0; display: none; animation: fadeIn 0.3s ease;">
+                        <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                            <span class="badge" style="background:#721a7b; color:white; font-size:0.85rem; padding:0.35rem 0.7rem; border-radius:12px;">📱 Yape / Plin</span>
+                            <span class="badge bg-warning text-dark" style="font-size:0.75rem; font-weight:700; padding:0.35rem 0.6rem; border-radius:12px;">QR TEMPORAL</span>
+                        </div>
+                        <img src="/images/qr-yape-temporal.svg" alt="QR Yape Temporal"
+                             style="width:230px; height:auto; border-radius:14px; box-shadow:0 6px 20px rgba(114,26,123,0.25);"
+                             class="img-fluid mb-2">
+                        <div class="fw-bold" style="color:#4e0e56; font-size:0.95rem;">
+                            <i class="bi bi-qr-code-scan"></i> Escanea el código para realizar tu abono
+                        </div>
+                        <div class="text-muted mt-1" style="font-size:0.8rem;">
+                            💡 Recuerda colocar tu <strong>Nombre y Apellido</strong> en el mensaje del Yape
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- STEP 4: Condición de Pago -->
             <div class="card-retiro mb-4">
                 <div class="card-header">
-                    <i class="bi bi-cash-stack"></i> Paso 4: Condición de Pago
+                    <i class="bi bi-cash-stack"></i> Paso 5: Condición de Pago
                 </div>
                 <div class="p-4">
                     <div class="row g-3 justify-content-center mb-3">
@@ -191,18 +228,18 @@
                                     value="ADELANTO">
                                 <label class="form-check-label fw-bold" for="tipoAdelanto"
                                     style="color:var(--marron-profundo); cursor:pointer;">
-                                    ⏳ Adelanto / Pago Parcial
+                                    ⏳ Adelanto / 1° Pago
                                 </label>
-                                <div class="small text-muted ms-4">Paga un monto inicial y queda un saldo pendiente
+                                <div class="small text-muted ms-4">Paga un monto inicial (permite hasta 3 abonos)
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Input para adelanto (oculto por defecto) -->
+                    <!-- Input para adelanto -->
                     <div id="divAdelanto" style="display:none; max-width:400px; margin:0 auto;">
                         <label class="form-label fw-bold" style="color:var(--marron-profundo);">
-                            <i class="bi bi-coin" style="color:var(--dorado-principal);"></i> Monto del Adelanto (S/):
+                            <i class="bi bi-coin" style="color:var(--dorado-principal);"></i> Monto del 1° Pago / Adelanto (S/):
                         </label>
                         <div class="input-group">
                             <span class="input-group-text fw-bold"
@@ -216,103 +253,109 @@
                 </div>
             </div>
 
-            <!-- SUBMIT -->
+            <!-- SUBMIT BUTTON -->
             <div class="text-center">
-                <button type="submit" id="submitBtn" class="btn btn-dorado" disabled style="min-width: 220px;">
-                    <i class="bi bi-check-circle"></i> Confirmar Registro
+                <button type="submit" id="submitBtn" class="btn btn-dorado btn-lg" disabled>
+                    <i class="bi bi-check-circle-fill"></i> Registrar Asistencia
                 </button>
-                <a href="/" class="btn btn-outline-dorado ms-2" style="min-width: 120px;">
-                    <i class="bi bi-arrow-left"></i> Volver
-                </a>
-                <div class="mt-2 text-muted" style="font-size:0.8rem;">
-                    * Selecciona el hermano/a, la modalidad y el medio de pago para habilitar el registro
-                </div>
             </div>
         </form>
     </div>
 
     <!-- FOOTER -->
     <footer>
-        <span>II Retiro Presbiterial de Jóvenes</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
+        <span>II Retiro Presbiterial de Jóvenes 2026</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/app.js"></script>
     <script>
-        const preciosModalidad = {
+        let modalidadPrecios = {
             'JUEVES_SABADO': 70,
             'MIERCOLES_SABADO': 80,
             'SOLO_VIERNES': 50
         };
 
-        function getModalidadSeleccionada() {
-            const sel = document.querySelector('.modalidad-option.selected input');
-            return sel ? sel.value : null;
-        }
+        let currentModalidad = null;
+        let currentTipoPago = 'TOTAL';
+
+        const origSelectModalidad = window.selectModalidad;
+        window.selectModalidad = function (val) {
+            origSelectModalidad(val);
+            currentModalidad = val;
+            actualizarSaldo();
+            checkFormReady();
+        };
+
+        const origSelectMedioPago = window.selectMedioPago;
+        window.selectMedioPago = function (val) {
+            origSelectMedioPago(val);
+            const qrDiv = document.getElementById('divQrYape');
+            if (qrDiv) {
+                qrDiv.style.display = (val === 'YAPE_PLIN') ? 'block' : 'none';
+            }
+            checkFormReady();
+        };
 
         function setTipoPago(tipo) {
-            const radTotal = document.getElementById('tipoTotal');
-            const radAdelanto = document.getElementById('tipoAdelanto');
+            currentTipoPago = tipo;
             const divAdelanto = document.getElementById('divAdelanto');
             const inputAdelanto = document.getElementById('inputMontoAdelanto');
+            const radioTotal = document.getElementById('tipoTotal');
+            const radioAdelanto = document.getElementById('tipoAdelanto');
 
             if (tipo === 'TOTAL') {
-                radTotal.checked = true;
+                radioTotal.checked = true;
                 divAdelanto.style.display = 'none';
-                inputAdelanto.required = false;
+                inputAdelanto.removeAttribute('required');
                 inputAdelanto.value = '';
             } else {
-                radAdelanto.checked = true;
+                radioAdelanto.checked = true;
                 divAdelanto.style.display = 'block';
-                inputAdelanto.required = true;
+                inputAdelanto.setAttribute('required', 'required');
+                inputAdelanto.focus();
                 actualizarSaldo();
             }
             checkFormReady();
         }
 
-        function actualizarSaldo() {
-            const mod = getModalidadSeleccionada();
-            const precioTotal = mod ? preciosModalidad[mod] || 70 : 70;
-            const inputAdelanto = document.getElementById('inputMontoAdelanto');
-            const saldoInfo = document.getElementById('saldoInfo');
-            const valor = parseInt(inputAdelanto.value) || 0;
-
-            if (valor > precioTotal) {
-                inputAdelanto.value = precioTotal;
-            }
-
-            const saldo = Math.max(0, precioTotal - (parseInt(inputAdelanto.value) || 0));
-            saldoInfo.innerHTML = `Total a pagar: S/ ${precioTotal} &bull; <span style="color:#d9534f;">Resta pagar: S/ ${saldo}</span>`;
+        const inputMontoAdelanto = document.getElementById('inputMontoAdelanto');
+        if (inputMontoAdelanto) {
+            inputMontoAdelanto.addEventListener('input', actualizarSaldo);
         }
 
-        document.getElementById('inputMontoAdelanto')?.addEventListener('input', () => {
-            actualizarSaldo();
-            checkFormReady();
-        });
+        function actualizarSaldo() {
+            const saldoInfo = document.getElementById('saldoInfo');
+            if (!saldoInfo) return;
+
+            const precio = currentModalidad ? modalidadPrecios[currentModalidad] : 70;
+            const inputAdelanto = document.getElementById('inputMontoAdelanto');
+            const abono = parseInt(inputAdelanto.value) || 0;
+
+            if (currentTipoPago === 'TOTAL') {
+                saldoInfo.innerHTML = `<span style="color:#198754;">Pago total: S/ ${precio} (Sin saldo pendiente)</span>`;
+            } else {
+                const saldo = Math.max(0, precio - abono);
+                saldoInfo.innerHTML = `Precio total: S/ ${precio} &bull; 
+                    <span style="color:${saldo > 0 ? '#d9534f' : '#198754'}; font-weight:700;">
+                        ${saldo > 0 ? 'Resta pagar: S/ ' + saldo : '¡Completado!'}
+                    </span>`;
+            }
+        }
 
         function checkFormReady() {
-            const hasPersona = document.getElementById('personaId') && document.getElementById('personaId').value !== '';
-            const hasModalidad = document.querySelector('.modalidad-option.selected') !== null;
-            const hasPago = document.querySelector('.pago-option.selected') !== null;
-            const isAdelanto = document.getElementById('tipoAdelanto')?.checked;
-            const adelantoVal = parseInt(document.getElementById('inputMontoAdelanto')?.value) || 0;
+            const personaId = document.getElementById('personaId').value;
+            const modChecked = document.querySelector('input[name="modalidad"]:checked');
+            const medioChecked = document.querySelector('input[name="medioPago"]:checked');
+            const btn = document.getElementById('submitBtn');
 
-            const adelantoOk = !isAdelanto || (adelantoVal > 0);
-
-            const submitBtn = document.getElementById('submitBtn');
-            if (submitBtn) {
-                submitBtn.disabled = !(hasPersona && hasModalidad && hasPago && adelantoOk);
+            if (personaId && modChecked && medioChecked) {
+                btn.disabled = false;
             }
         }
 
-        // Attach listeners
-        document.querySelectorAll('.modalidad-option, .pago-option').forEach(el => {
-            el.addEventListener('click', () => {
-                setTimeout(() => {
-                    actualizarSaldo();
-                    checkFormReady();
-                }, 50);
-            });
+        document.addEventListener('DOMContentLoaded', function () {
+            checkFormReady();
         });
 
         const origSeleccionar = window.seleccionarPersona;

@@ -5,6 +5,7 @@ import com.retiro.jovenes.repository.RegistroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,23 +24,69 @@ public class RegistroService {
     }
 
     public Registro save(Registro registro) {
-        int precioTotal = registro.getModalidad().getPrecio();
-        if (registro.getMontoPagado() == null || registro.getMontoPagado() >= precioTotal) {
-            registro.setMontoPagado(precioTotal);
-            registro.setEstadoPago(Registro.EstadoPago.COMPLETO);
-        } else {
-            registro.setEstadoPago(Registro.EstadoPago.ADELANTO);
+        // Asegurar consistencia del primer pago
+        if (registro.getMontoPago1() == null && registro.getMontoPagado() != null) {
+            registro.setMontoPago1(registro.getMontoPagado());
+            registro.setMedioPago1(registro.getMedioPago());
+            registro.setFechaPago1(registro.getFechaRegistro() != null ? registro.getFechaRegistro() : LocalDateTime.now());
         }
+        registro.recalcularMontoYEstado();
         return registroRepository.save(registro);
+    }
+
+    public void registrarAbono(Long id, int montoAbono, Registro.MedioPago medioPago) {
+        findById(id).ifPresent(r -> {
+            int saldo = r.getSaldoPendiente();
+            if (saldo <= 0) return;
+
+            int montoReal = Math.min(montoAbono, saldo);
+            LocalDateTime ahora = LocalDateTime.now();
+            Registro.MedioPago mp = (medioPago != null) ? medioPago : r.getMedioPago();
+
+            if (r.getMontoPago2() == null || r.getMontoPago2() <= 0) {
+                r.setMontoPago2(montoReal);
+                r.setMedioPago2(mp);
+                r.setFechaPago2(ahora);
+            } else if (r.getMontoPago3() == null || r.getMontoPago3() <= 0) {
+                r.setMontoPago3(montoReal);
+                r.setMedioPago3(mp);
+                r.setFechaPago3(ahora);
+            } else {
+                // Si ya tenía 3 abonos registrados pero quedaba saldo residual
+                r.setMontoPago3(r.getMontoPago3() + montoReal);
+                r.setFechaPago3(ahora);
+            }
+
+            // Actualizar último medio de pago usado
+            r.setMedioPago(mp);
+            r.recalcularMontoYEstado();
+            registroRepository.save(r);
+        });
     }
 
     public void completarPago(Long id, Registro.MedioPago nuevoMedioPago) {
         findById(id).ifPresent(r -> {
-            r.setMontoPagado(r.getModalidad().getPrecio());
-            r.setEstadoPago(Registro.EstadoPago.COMPLETO);
-            if (nuevoMedioPago != null) {
-                r.setMedioPago(nuevoMedioPago);
+            int saldo = r.getSaldoPendiente();
+            if (saldo <= 0) return;
+
+            LocalDateTime ahora = LocalDateTime.now();
+            Registro.MedioPago mp = (nuevoMedioPago != null) ? nuevoMedioPago : r.getMedioPago();
+
+            if (r.getMontoPago2() == null || r.getMontoPago2() <= 0) {
+                r.setMontoPago2(saldo);
+                r.setMedioPago2(mp);
+                r.setFechaPago2(ahora);
+            } else if (r.getMontoPago3() == null || r.getMontoPago3() <= 0) {
+                r.setMontoPago3(saldo);
+                r.setMedioPago3(mp);
+                r.setFechaPago3(ahora);
+            } else {
+                r.setMontoPago3((r.getMontoPago3() != null ? r.getMontoPago3() : 0) + saldo);
+                r.setFechaPago3(ahora);
             }
+
+            r.setMedioPago(mp);
+            r.recalcularMontoYEstado();
             registroRepository.save(r);
         });
     }

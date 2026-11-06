@@ -9,6 +9,30 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <style>
+        .badge-iglesia {
+            background: #fdf2f8;
+            color: #9d174d;
+            border: 1px solid #fbcfe8;
+            padding: 0.3rem 0.65rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .pago-pill {
+            display: inline-block;
+            font-size: 0.72rem;
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            margin: 1px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
         @page {
             size: landscape;
             margin: 8mm 10mm;
@@ -21,7 +45,7 @@
                 padding: 0 !important;
                 background: white !important;
                 color: #000 !important;
-                font-size: 9pt !important;
+                font-size: 8.5pt !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
@@ -55,7 +79,7 @@
             .table-retiro {
                 width: 100% !important;
                 table-layout: auto !important;
-                font-size: 8.5pt !important;
+                font-size: 8pt !important;
                 border-collapse: collapse !important;
                 margin: 0 !important;
             }
@@ -66,16 +90,16 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 padding: 5px 6px !important;
-                font-size: 8.5pt !important;
+                font-size: 8pt !important;
                 border: 1px solid #442a00 !important;
                 white-space: nowrap !important;
                 text-align: center !important;
             }
 
             .table-retiro tbody td {
-                padding: 4px 6px !important;
+                padding: 4px 5px !important;
                 border: 1px solid #ccc !important;
-                font-size: 8pt !important;
+                font-size: 7.5pt !important;
                 vertical-align: middle !important;
             }
 
@@ -83,11 +107,11 @@
                 display: none !important;
             }
 
-            .badge-rol, .badge-grupo, .badge-pago, .badge {
+            .badge-rol, .badge-grupo, .badge-pago, .badge, .badge-iglesia {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                padding: 2px 6px !important;
-                font-size: 7.5pt !important;
+                padding: 2px 5px !important;
+                font-size: 7pt !important;
                 border-radius: 6px !important;
                 white-space: nowrap !important;
                 display: inline-block !important;
@@ -146,7 +170,7 @@
     <!-- HERO -->
     <div class="hero-header no-print" style="padding: 1.5rem 1rem;">
         <h1 style="font-size:1.4rem;"><i class="bi bi-table"></i> Panel CRUD de Asistentes Registrados</h1>
-        <p>Control general, cobros, adelantos y edición de inscripciones</p>
+        <p>Control de abonos (hasta 3 pagos), iglesias, cobranzas y estados</p>
     </div>
 
     <!-- PRINT HEADER -->
@@ -157,10 +181,7 @@
                     II RETIRO PRESBITERIAL DE JÓVENES &bull; VOLVAMOS A DIOS
                 </h4>
                 <div style="font-size:10.5pt; font-weight:700; color:#8B6013;">
-                    LISTADO GENERAL COMPLETO DE REGISTROS DE ASISTENCIA
-                </div>
-                <div style="font-size:8pt; color:#666;">
-                    Casa de Retiros Bethel - Pachacámac &bull; Canto Grande
+                    LISTADO GENERAL DE ASISTENTES E HISTORIAL DE PAGOS
                 </div>
             </div>
             <div class="text-end" style="font-size:8pt; color:#555;">
@@ -175,12 +196,10 @@
             <div><strong>Con Adelanto:</strong> <span th:text="${cantAdelantos}">0</span></div>
             <div><strong>Total Recaudado:</strong> S/ <span th:text="${totalRecaudado}">0</span></div>
             <div><strong>Saldo por Cobrar:</strong> S/ <span th:text="${totalSaldoPendiente}">0</span></div>
-            <div><strong>Yape/Plin:</strong> <span th:text="${cantYapePlin}">0</span> (S/ <span th:text="${totalYapePlin}">0</span>)</div>
-            <div><strong>Efectivo:</strong> <span th:text="${cantEfectivo}">0</span> (S/ <span th:text="${totalEfectivo}">0</span>)</div>
         </div>
     </div>
 
-    <div class="container-fluid px-3 px-xl-5 py-4" style="max-width: 1600px;">
+    <div class="container-fluid px-3 px-xl-5 py-4" style="max-width: 1650px;">
         <!-- Alert messages -->
         <div th:if="${success}" class="alert-retiro-success mb-3 no-print" role="alert">
             <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
@@ -198,21 +217,21 @@
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="stat-card">
-                    <div class="stat-number" th:data-value="${cantJuevesSabado}" th:text="${cantJuevesSabado}">0</div>
-                    <div class="stat-label">Jue-Sáb (S/70)</div>
+                <div class="stat-card" style="border-top-color:#198754;">
+                    <div class="stat-number" style="color:#198754;" th:data-value="${cantCompletos}" th:text="${cantCompletos}">0</div>
+                    <div class="stat-label">✅ Pagos Completos</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card" style="border-top-color:#fd7e14;">
+                    <div class="stat-number" style="color:#fd7e14;" th:data-value="${cantAdelantos}" th:text="${cantAdelantos}">0</div>
+                    <div class="stat-label">⏳ Con Adelanto (Cuotas)</div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="stat-card">
-                    <div class="stat-number" th:data-value="${cantMiercolesSabado}" th:text="${cantMiercolesSabado}">0</div>
-                    <div class="stat-label">Mié-Sáb (S/80)</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-card">
-                    <div class="stat-number" th:data-value="${cantSoloViernes}" th:text="${cantSoloViernes}">0</div>
-                    <div class="stat-label">Solo Vier. (S/50)</div>
+                    <div class="stat-number" th:data-value="${totalRecaudado}" th:text="${totalRecaudado}">0</div>
+                    <div class="stat-label">Total Recaudado (S/)</div>
                 </div>
             </div>
         </div>
@@ -227,20 +246,14 @@
                 <span class="badge-pago badge-EFECTIVO" style="font-size:0.9rem; padding:0.4rem 0.9rem;">
                     💵 Efectivo: <strong th:text="${cantEfectivo} + ' (S/ ' + ${totalEfectivo} + ')'">0</strong>
                 </span>
-                <span class="badge bg-success" style="font-size:0.85rem; padding:0.4rem 0.8rem; border-radius:15px;">
-                    ✅ Pagos Completos: <strong th:text="${cantCompletos}">0</strong>
-                </span>
-                <span class="badge bg-warning text-dark" style="font-size:0.85rem; padding:0.4rem 0.8rem; border-radius:15px;">
-                    ⏳ Con Adelanto: <strong th:text="${cantAdelantos}">0</strong>
+                <span th:if="${totalSaldoPendiente > 0}" class="badge bg-danger" style="font-size:0.85rem; padding:0.4rem 0.8rem; border-radius:12px;">
+                    ⚠️ Saldo Total por Cobrar: S/ <strong th:text="${totalSaldoPendiente}">0</strong>
                 </span>
             </div>
             <div class="text-end">
                 <div style="font-weight:800; color:var(--marron-profundo); font-size:1.15rem;">
                     <i class="bi bi-cash-coin" style="color:var(--dorado-principal);"></i> Recaudado:
                     <span style="color:var(--dorado-oscuro);" th:text="'S/ ' + ${totalRecaudado}">S/ 0</span>
-                </div>
-                <div th:if="${totalSaldoPendiente > 0}" style="font-size:0.85rem; font-weight:700; color:#dc3545;">
-                    <i class="bi bi-hourglass-bottom"></i> Saldo por cobrar: S/ <span th:text="${totalSaldoPendiente}">0</span>
                 </div>
             </div>
         </div>
@@ -251,15 +264,15 @@
                 <h5 style="color:var(--marron-profundo); font-weight:800; margin:0;">
                     <i class="bi bi-people"></i> Asistentes Registrados
                 </h5>
-                <span class="badge bg-dark ms-1" th:text="${registros.size()} + ' en total'"></span>
+                <span class="badge bg-dark ms-1" th:text="${registros.size()} + ' inscritos'"></span>
             </div>
             <div class="d-flex align-items-center gap-2 flex-wrap">
-                <input type="text" id="crudSearch" class="form-control form-control-sm" placeholder="🔍 Buscar en registros..." style="min-width:240px; border-radius:8px;">
+                <input type="text" id="crudSearch" class="form-control form-control-sm" placeholder="🔍 Filtrar por nombre, grupo o iglesia..." style="min-width:260px; border-radius:8px;">
                 <button class="btn btn-outline-dorado btn-sm" onclick="window.print()">
                     <i class="bi bi-printer-fill"></i> Imprimir / PDF
                 </button>
                 <a href="/reportes" class="btn btn-outline-dorado btn-sm">
-                    <i class="bi bi-file-earmark-bar-graph"></i> Reportes por Grupo
+                    <i class="bi bi-file-earmark-bar-graph"></i> Reportes
                 </a>
                 <a href="/registro" class="btn btn-dorado btn-sm">
                     <i class="bi bi-person-plus"></i> + Nuevo Registro
@@ -274,15 +287,15 @@
                     <thead>
                         <tr>
                             <th style="width:35px; text-align:center;">#</th>
-                            <th style="min-width:180px;"><i class="bi bi-person"></i> Nombre Completo</th>
+                            <th style="min-width:170px;"><i class="bi bi-person"></i> Nombre</th>
+                            <th style="white-space:nowrap; text-align:center;"><i class="bi bi-buildings"></i> Iglesia</th>
                             <th style="white-space:nowrap; text-align:center;"><i class="bi bi-award"></i> Rol</th>
                             <th style="white-space:nowrap; text-align:center;"><i class="bi bi-people"></i> Grupo</th>
                             <th style="white-space:nowrap;"><i class="bi bi-calendar"></i> Modalidad</th>
-                            <th style="white-space:nowrap; text-align:center;"><i class="bi bi-credit-card"></i> Pago</th>
-                            <th style="white-space:nowrap; text-align:right;"><i class="bi bi-cash"></i> Pagado</th>
+                            <th style="white-space:nowrap; text-align:center;"><i class="bi bi-receipt"></i> Historial Abonos</th>
+                            <th style="white-space:nowrap; text-align:right;"><i class="bi bi-cash"></i> Total Pagado</th>
                             <th style="white-space:nowrap; text-align:right;"><i class="bi bi-hourglass-split"></i> Saldo</th>
                             <th style="white-space:nowrap; text-align:center;"><i class="bi bi-patch-check"></i> Estado</th>
-                            <th style="white-space:nowrap; text-align:center;"><i class="bi bi-clock"></i> Fecha</th>
                             <th style="white-space:nowrap; text-align:center;" class="col-acciones">Acciones</th>
                         </tr>
                     </thead>
@@ -294,8 +307,14 @@
                                     <div class="person-avatar"
                                         style="width:30px;height:30px;font-size:0.75rem;background:linear-gradient(135deg,var(--dorado-principal),var(--dorado-oscuro));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex-shrink:0;"
                                         th:text="${reg.persona.iniciales}"></div>
-                                    <span th:text="${reg.persona.getNombreCompleto()}" style="font-weight:700;"></span>
+                                    <div>
+                                        <div style="font-weight:700; color:var(--marron-profundo);" th:text="${reg.persona.getNombreCompleto()}"></div>
+                                        <small class="text-muted" style="font-size:0.75rem;" th:if="${reg.fechaRegistro != null}" th:text="${#temporals.format(reg.fechaRegistro, 'dd/MM HH:mm')}"></small>
+                                    </div>
                                 </div>
+                            </td>
+                            <td style="white-space:nowrap; text-align:center;">
+                                <span class="badge-iglesia" th:text="${reg.iglesia != null ? reg.iglesia.displayName : 'Iglesia Canto Grande'}"></span>
                             </td>
                             <td style="white-space:nowrap; text-align:center;">
                                 <span class="badge-rol" th:classappend="'badge-' + ${reg.persona.rol.name()}"
@@ -305,10 +324,39 @@
                                 <span class="badge-grupo" th:text="'Grupo ' + ${reg.persona.numeroGrupo}"></span>
                             </td>
                             <td style="white-space:nowrap;" th:text="${reg.modalidad.getDisplayName()}"></td>
+
+                            <!-- Detalle de Abonos (Hasta 3) -->
                             <td style="white-space:nowrap; text-align:center;">
-                                <span class="badge-pago" th:classappend="'badge-' + ${reg.medioPago.name()}"
-                                    th:text="${reg.medioPago.icono + ' ' + reg.medioPago.displayName}"></span>
+                                <div class="d-flex flex-column align-items-center gap-1">
+                                    <div class="d-flex gap-1 flex-wrap justify-content-center">
+                                        <!-- Pago 1 -->
+                                        <span class="pago-pill" th:if="${reg.montoPago1 != null and reg.montoPago1 > 0}"
+                                              th:title="${reg.medioPago1 != null ? reg.medioPago1.displayName : ''}">
+                                            1° S/ <strong th:text="${reg.montoPago1}"></strong>
+                                            <span th:text="${reg.medioPago1 != null ? reg.medioPago1.icono : '💵'}"></span>
+                                        </span>
+
+                                        <!-- Pago 2 -->
+                                        <span class="pago-pill" style="border-color:#93c5fd; background:#eff6ff;"
+                                              th:if="${reg.montoPago2 != null and reg.montoPago2 > 0}"
+                                              th:title="${reg.medioPago2 != null ? reg.medioPago2.displayName : ''}">
+                                            2° S/ <strong th:text="${reg.montoPago2}"></strong>
+                                            <span th:text="${reg.medioPago2 != null ? reg.medioPago2.icono : '💵'}"></span>
+                                        </span>
+
+                                        <!-- Pago 3 -->
+                                        <span class="pago-pill" style="border-color:#86efac; background:#f0fdf4;"
+                                              th:if="${reg.montoPago3 != null and reg.montoPago3 > 0}"
+                                              th:title="${reg.medioPago3 != null ? reg.medioPago3.displayName : ''}">
+                                            3° S/ <strong th:text="${reg.montoPago3}"></strong>
+                                            <span th:text="${reg.medioPago3 != null ? reg.medioPago3.icono : '💵'}"></span>
+                                        </span>
+                                    </div>
+                                    <small class="text-muted" style="font-size:0.7rem;"
+                                           th:text="'(' + ${reg.numeroPagosRealizados} + '/3 abonos)'"></small>
+                                </div>
                             </td>
+
                             <td style="white-space:nowrap; text-align:right;">
                                 <strong style="color:var(--dorado-oscuro);" th:text="'S/ ' + ${reg.montoPagado}"></strong>
                             </td>
@@ -324,22 +372,40 @@
                                     ⏳ Adelanto
                                 </span>
                             </td>
-                            <td style="font-size:0.8rem; color:#666; white-space:nowrap; text-align:center;"
-                                th:text="${#temporals.format(reg.fechaRegistro, 'dd/MM HH:mm')}"></td>
                             <td class="col-acciones" style="white-space:nowrap; text-align:center;">
                                 <div class="d-flex gap-1 align-items-center justify-content-center">
-                                    <!-- Botón rápido completar pago -->
+
+                                    <!-- Botón Abonar (2° o 3° pago) -->
+                                    <button th:if="${reg.puedeAgregarPago()}"
+                                            type="button"
+                                            class="btn btn-sm btn-primary btn-abono"
+                                            style="border-radius:8px; padding:0.3rem 0.6rem; font-size:0.78rem; font-weight:700;"
+                                            th:data-id="${reg.id}"
+                                            th:data-nombre="${reg.persona.nombreCompleto}"
+                                            th:data-saldo="${reg.saldoPendiente}"
+                                            th:data-num="${reg.siguienteNumeroPago}"
+                                            title="Registrar nuevo abono parcial">
+                                        <i class="bi bi-plus-circle"></i> + Abonar
+                                    </button>
+
+                                    <!-- Botón rápido completar pago restante -->
                                     <form th:if="${!reg.pagoCompleto}" th:action="@{/crud/completar-pago/{id}(id=${reg.id})}" method="POST" style="display:inline;">
-                                        <button type="submit" class="btn btn-sm btn-success" style="border-radius:8px; padding:0.3rem 0.6rem; font-size:0.8rem; font-weight:700;" title="Completar Pago Total" onclick="return confirm('¿Confirmar que este asistente completó el pago total de su retiro?')">
-                                            <i class="bi bi-check-all"></i> Completar
+                                        <button type="submit" class="btn btn-sm btn-success"
+                                                style="border-radius:8px; padding:0.3rem 0.6rem; font-size:0.78rem; font-weight:700;"
+                                                title="Completar todo el saldo restante"
+                                                onclick="return confirm('¿Confirmar que este asistente canceló todo el saldo pendiente?')">
+                                            <i class="bi bi-check-all"></i> Cancelar
                                         </button>
                                     </form>
 
+                                    <!-- Editar -->
                                     <a th:href="@{/crud/editar/{id}(id=${reg.id})}" class="btn btn-sm"
                                         style="background:var(--dorado-principal);color:white;border-radius:8px;padding:0.3rem 0.6rem;"
                                         title="Editar Registro">
                                         <i class="bi bi-pencil"></i>
                                     </a>
+
+                                    <!-- Eliminar -->
                                     <form th:action="@{/crud/eliminar/{id}(id=${reg.id})}" method="POST"
                                         style="display:inline;">
                                         <button type="submit" class="btn btn-sm btn-danger btn-eliminar"
@@ -368,9 +434,79 @@
         </div>
     </div>
 
+    <!-- MODAL PARA REGISTRAR ABONO (2° o 3° Pago) -->
+    <div class="modal fade no-print" id="modalAbono" tabindex="-1" aria-labelledby="modalAbonoTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius:20px; overflow:hidden; border:2px solid var(--dorado-principal);">
+                <div class="modal-header" style="background:linear-gradient(135deg, var(--marron-profundo), var(--dorado-oscuro)); color:white;">
+                    <h5 class="modal-title fw-bold" id="modalAbonoTitle">
+                        <i class="bi bi-cash-stack" style="color:var(--dorado-principal);"></i> Registrar Nuevo Abono
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formAbono" method="POST" action="">
+                    <div class="modal-body p-4">
+                        <div class="text-center mb-3">
+                            <h6 class="fw-bold mb-1" id="modalPersonaNombre" style="color:var(--marron-profundo); font-size:1.15rem;"></h6>
+                            <span class="badge bg-warning text-dark fw-bold" id="modalNumPagoBadge">2° Pago</span>
+                            <div class="mt-2 text-danger fw-bold" id="modalSaldoTexto"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="color:var(--marron-profundo);">
+                                <i class="bi bi-coin" style="color:var(--dorado-principal);"></i> Monto a Pagar en este Abono (S/):
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text fw-bold" style="background:var(--fondo-claro); border:2px solid #e8d5b0;">S/</span>
+                                <input type="number" id="modalMontoAbono" name="montoAbono" class="form-control"
+                                       required min="1" style="border:2px solid #e8d5b0; border-radius:0 10px 10px 0; font-size:1.1rem; font-weight:700;">
+                            </div>
+                            <small class="text-muted" id="modalMontoHelp">El monto no puede superar el saldo pendiente.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="color:var(--marron-profundo);">
+                                <i class="bi bi-credit-card-2-front" style="color:var(--dorado-principal);"></i> Medio de Pago del Abono:
+                            </label>
+                            <div class="d-flex gap-2">
+                                <div class="form-check flex-fill border rounded-3 p-2 d-flex align-items-center gap-2" style="background:#fcfaff; cursor:pointer;">
+                                    <input class="form-check-input ms-1" type="radio" name="medioPago" id="modalMedioYape" value="YAPE_PLIN" checked onchange="toggleModalQr(this.value)">
+                                    <label class="form-check-label fw-bold" for="modalMedioYape" style="cursor:pointer; color:#721a7b;">
+                                        📱 Yape / Plin
+                                    </label>
+                                </div>
+                                <div class="form-check flex-fill border rounded-3 p-2 d-flex align-items-center gap-2" style="background:#fafffb; cursor:pointer;">
+                                    <input class="form-check-input ms-1" type="radio" name="medioPago" id="modalMedioEfectivo" value="EFECTIVO" onchange="toggleModalQr(this.value)">
+                                    <label class="form-check-label fw-bold" for="modalMedioEfectivo" style="cursor:pointer; color:#198754;">
+                                        💵 Efectivo
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- QR YAPE DENTRO DEL MODAL -->
+                        <div id="modalDivQr" class="text-center p-3 rounded-4 mt-3"
+                             style="background: linear-gradient(135deg, #fbf2fd, #f0fbfb); border: 2px dashed #802688;">
+                            <img src="/images/qr-yape-temporal.svg" alt="QR Yape" style="width:190px; height:auto; border-radius:12px; box-shadow:0 4px 15px rgba(114,26,123,0.2);" class="img-fluid mb-2">
+                            <div class="small fw-bold" style="color:#4e0e56;">
+                                <i class="bi bi-qr-code-scan"></i> Escanea para abonar con Yape
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background:var(--fondo-claro);">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-dorado fw-bold">
+                            <i class="bi bi-check-circle-fill"></i> Confirmar Abono
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="no-print">
-        <span>II Retiro Presbiterial de Jóvenes</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
+        <span>II Retiro Presbiterial de Jóvenes 2026</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -385,6 +521,40 @@
                     row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
                 });
             });
+        }
+
+        // Configuración dinámica del modal de abono
+        const modalAbonoEl = document.getElementById('modalAbono');
+        const modalAbono = new bootstrap.Modal(modalAbonoEl);
+
+        document.querySelectorAll('.btn-abono').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const nombre = this.getAttribute('data-nombre');
+                const saldo = parseInt(this.getAttribute('data-saldo')) || 0;
+                const num = this.getAttribute('data-num') || '2';
+
+                document.getElementById('formAbono').action = '/crud/abonar/' + id;
+                document.getElementById('modalPersonaNombre').textContent = nombre;
+                document.getElementById('modalNumPagoBadge').textContent = num + '° Pago (Abono)';
+                document.getElementById('modalSaldoTexto').textContent = 'Saldo Restante Actual: S/ ' + saldo;
+
+                const inputMonto = document.getElementById('modalMontoAbono');
+                inputMonto.value = saldo; // Sugiere cancelar el resto por defecto
+                inputMonto.max = saldo;
+
+                document.getElementById('modalMedioYape').checked = true;
+                toggleModalQr('YAPE_PLIN');
+
+                modalAbono.show();
+            });
+        });
+
+        function toggleModalQr(medio) {
+            const qrBox = document.getElementById('modalDivQr');
+            if (qrBox) {
+                qrBox.style.display = (medio === 'YAPE_PLIN') ? 'block' : 'none';
+            }
         }
     </script>
 </body>

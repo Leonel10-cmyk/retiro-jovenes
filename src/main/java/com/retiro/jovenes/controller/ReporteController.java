@@ -29,7 +29,9 @@ public class ReporteController {
     private RegistroRepository registroRepository;
 
     @GetMapping
-    public String verReporte(@RequestParam(required = false) Integer grupo, Model model) {
+    public String verReporte(@RequestParam(required = false) Integer grupo,
+                             @RequestParam(required = false) Registro.Iglesia iglesia,
+                             Model model) {
         List<Persona> todasPersonas = personaRepository.findAllByOrderByNumeroGrupoAscNombresAsc();
         List<Registro> todosRegistros = registroRepository.findAllWithPersona();
 
@@ -40,10 +42,11 @@ public class ReporteController {
                 .sorted()
                 .collect(Collectors.toList());
 
-        // Filtrar SOLO personas que se han registrado (con pago completo o adelanto)
-        List<Registro> registrosFiltrados = (grupo != null && grupo > 0)
-                ? todosRegistros.stream().filter(r -> r.getPersona().getNumeroGrupo().equals(grupo)).collect(Collectors.toList())
-                : todosRegistros;
+        // Filtrar SOLO personas que se han registrado por grupo y/o iglesia
+        List<Registro> registrosFiltrados = todosRegistros.stream()
+                .filter(r -> (grupo == null || grupo <= 0 || r.getPersona().getNumeroGrupo().equals(grupo)))
+                .filter(r -> (iglesia == null || r.getIglesia() == iglesia))
+                .collect(Collectors.toList());
 
         // Estadísticas sobre los registrados
         long totalRegistrados = registrosFiltrados.size();
@@ -63,7 +66,9 @@ public class ReporteController {
         long cantSoloViernes = registrosFiltrados.stream().filter(r -> r.getModalidad() == Registro.Modalidad.SOLO_VIERNES).count();
 
         model.addAttribute("grupos", grupos);
+        model.addAttribute("iglesias", Registro.Iglesia.values());
         model.addAttribute("grupoSeleccionado", grupo != null ? grupo : 0);
+        model.addAttribute("iglesiaSeleccionada", iglesia);
         model.addAttribute("registros", registrosFiltrados);
         model.addAttribute("totalRegistrados", totalRegistrados);
         model.addAttribute("totalRecaudado", totalRecaudado);
@@ -82,14 +87,22 @@ public class ReporteController {
     }
 
     @GetMapping("/exportar-csv")
-    public void exportarCsv(@RequestParam(required = false) Integer grupo, HttpServletResponse response) throws IOException {
+    public void exportarCsv(@RequestParam(required = false) Integer grupo,
+                            @RequestParam(required = false) Registro.Iglesia iglesia,
+                            HttpServletResponse response) throws IOException {
         List<Registro> todosRegistros = registroRepository.findAllWithPersona();
 
-        List<Registro> registrosFiltrados = (grupo != null && grupo > 0)
-                ? todosRegistros.stream().filter(r -> r.getPersona().getNumeroGrupo().equals(grupo)).collect(Collectors.toList())
-                : todosRegistros;
+        List<Registro> registrosFiltrados = todosRegistros.stream()
+                .filter(r -> (grupo == null || grupo <= 0 || r.getPersona().getNumeroGrupo().equals(grupo)))
+                .filter(r -> (iglesia == null || r.getIglesia() == iglesia))
+                .collect(Collectors.toList());
 
-        String nombreArchivo = (grupo != null && grupo > 0) ? "reporte_inscritos_grupo_" + grupo + ".csv" : "reporte_inscritos_general_retiro.csv";
+        String nombreArchivo = "reporte_inscritos_retiro_2026.csv";
+        if (grupo != null && grupo > 0) {
+            nombreArchivo = "reporte_inscritos_grupo_" + grupo + ".csv";
+        } else if (iglesia != null) {
+            nombreArchivo = "reporte_inscritos_" + iglesia.name().toLowerCase() + ".csv";
+        }
 
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + nombreArchivo + "\"");
@@ -97,7 +110,7 @@ public class ReporteController {
         PrintWriter writer = response.getWriter();
         // BOM for Excel UTF-8 compatibility
         writer.write('\uFEFF');
-        writer.println("N°,Grupo,Nombres,Apellidos,Rol,Modalidad,Medio de Pago,Monto Pagado (S/),Saldo Pendiente (S/),Estado de Pago,Fecha de Registro");
+        writer.println("N°,Iglesia,Grupo,Nombres,Apellidos,Rol,Modalidad,1° Pago (S/),2° Pago (S/),3° Pago (S/),Total Pagado (S/),Saldo Pendiente (S/),Estado de Pago,Fecha de Registro");
 
         int index = 1;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -105,20 +118,26 @@ public class ReporteController {
             Persona p = r.getPersona();
             String estadoPago = r.isPagoCompleto() ? "PAGO COMPLETO" : "ADELANTO (Resta S/ " + r.getSaldoPendiente() + ")";
             String modalidad = r.getModalidad().getDisplayName();
-            String medioPago = r.getMedioPago().getDisplayName();
-            int monto = r.getMontoPagado();
+            String iglesiaNombre = (r.getIglesia() != null) ? r.getIglesia().getDisplayName() : "Canto Grande";
+            int p1 = (r.getMontoPago1() != null) ? r.getMontoPago1() : (r.getMontoPagado() != null ? r.getMontoPagado() : 0);
+            String p2 = (r.getMontoPago2() != null && r.getMontoPago2() > 0) ? String.valueOf(r.getMontoPago2()) : "-";
+            String p3 = (r.getMontoPago3() != null && r.getMontoPago3() > 0) ? String.valueOf(r.getMontoPago3()) : "-";
+            int total = r.getMontoPagado();
             int saldo = r.getSaldoPendiente();
             String fecha = (r.getFechaRegistro() != null) ? r.getFechaRegistro().format(dtf) : "-";
 
-            writer.printf("%d,%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%d,%d,\"%s\",\"%s\"%n",
+            writer.printf("%d,\"%s\",%d,\"%s\",\"%s\",\"%s\",\"%s\",%d,%s,%s,%d,%d,\"%s\",\"%s\"%n",
                     index++,
+                    iglesiaNombre,
                     p.getNumeroGrupo(),
                     p.getNombres().replace("\"", "\"\""),
                     p.getApellidos().replace("\"", "\"\""),
                     p.getRol().getDisplayName(),
                     modalidad,
-                    medioPago,
-                    monto,
+                    p1,
+                    p2,
+                    p3,
+                    total,
                     saldo,
                     estadoPago,
                     fecha

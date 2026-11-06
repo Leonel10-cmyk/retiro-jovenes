@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 460" width="100%" height="100%">
+  <defs>
+    <linearGradient id="yapeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#802688" />
+      <stop offset="50%" stop-color="#721a7b" />
+      <stop offset="100%" stop-color="#4e0e56" />
+    </linearGradient>
+    <linearGradient id="qrBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D2C4" />
+      <stop offset="100%" stop-color="#721a7b" />
+    </linearGradient>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect width="380" height="460" rx="24" fill="url(#yapeGrad)" filter="url(#cardShadow)"/>
+
+  <!-- Top Yape Header -->
+  <g transform="translate(190, 45)">
+    <!-- Yape logo pill -->
+    <rect x="-65" y="-22" width="130" height="44" rx="22" fill="#00D2C4" />
+    <text x="0" y="7" font-family="'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="900" fill="#4e0e56" text-anchor="middle" letter-spacing="-0.5">yape</text>
+  </g>
+
+  <!-- Subtitle -->
+  <text x="190" y="90" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">
+    ESCANEA PARA PAGAR
+  </text>
+
+  <!-- White QR Container Box -->
+  <rect x="50" y="105" width="280" height="280" rx="18" fill="#FFFFFF" />
+
+  <!-- QR Code Graphics (Geometric Vector QR Simulation) -->
+  <g transform="translate(75, 125)">
+    <!-- Top-Left Finder -->
+    <rect x="0" y="0" width="60" height="60" rx="8" fill="#4e0e56"/>
+    <rect x="10" y="10" width="40" height="40" rx="4" fill="#FFFFFF"/>
+    <rect x="20" y="20" width="20" height="20" rx="3" fill="#4e0e56"/>
+
+    <!-- Top-Right Finder -->
+    <rect x="170" y="0" width="60" height="60" rx="8" fill="#4e0e56"/>
+    <rect x="180" y="10" width="40" height="40" rx="4" fill="#FFFFFF"/>
+    <rect x="190" y="20" width="20" height="20" rx="3" fill="#4e0e56"/>
+
+    <!-- Bottom-Left Finder -->
+    <rect x="0" y="170" width="60" height="60" rx="8" fill="#4e0e56"/>
+    <rect x="10" y="180" width="40" height="40" rx="4" fill="#FFFFFF"/>
+    <rect x="20" y="190" width="20" height="20" rx="3" fill="#4e0e56"/>
+
+    <!-- Timing & Data Modules Grid -->
+    <!-- Horizontal & Vertical lines -->
+    <rect x="70" y="24" width="10" height="10" fill="#4e0e56"/>
+    <rect x="90" y="24" width="10" height="10" fill="#4e0e56"/>
+    <rect x="110" y="24" width="10" height="10" fill="#4e0e56"/>
+    <rect x="130" y="24" width="10" height="10" fill="#4e0e56"/>
+    <rect x="150" y="24" width="10" height="10" fill="#4e0e56"/>
+
+    <rect x="24" y="70" width="10" height="10" fill="#4e0e56"/>
+    <rect x="24" y="90" width="10" height="10" fill="#4e0e56"/>
+    <rect x="24" y="110" width="10" height="10" fill="#4e0e56"/>
+    <rect x="24" y="130" width="10" height="10" fill="#4e0e56"/>
+    <rect x="24" y="150" width="10" height="10" fill="#4e0e56"/>
+
+    <!-- Data clusters -->
+    <rect x="70" y="70" width="20" height="20" rx="3" fill="#00D2C4"/>
+    <rect x="100" y="70" width="10" height="20" fill="#4e0e56"/>
+    <rect x="120" y="70" width="20" height="10" fill="#4e0e56"/>
+    <rect x="150" y="70" width="10" height="20" fill="#4e0e56"/>
+
+    <rect x="70" y="100" width="10" height="20" fill="#4e0e56"/>
+    <rect x="90" y="100" width="30" height="10" fill="#4e0e56"/>
+    <rect x="130" y="90" width="20" height="20" rx="4" fill="#00D2C4"/>
+
+    <rect x="80" y="130" width="20" height="10" fill="#4e0e56"/>
+    <rect x="110" y="120" width="10" height="30" fill="#4e0e56"/>
+    <rect x="130" y="130" width="30" height="10" fill="#4e0e56"/>
+    <rect x="170" y="80" width="10" height="30" fill="#4e0e56"/>
+    <rect x="190" y="90" width="20" height="10" fill="#4e0e56"/>
+    <rect x="180" y="110" width="20" height="20" rx="3" fill="#00D2C4"/>
+    <rect x="210" y="120" width="10" height="20" fill="#4e0e56"/>
+
+    <rect x="70" y="150" width="20" height="20" fill="#4e0e56"/>
+    <rect x="100" y="160" width="20" height="10" fill="#4e0e56"/>
+    <rect x="130" y="150" width="10" height="20" fill="#4e0e56"/>
+    <rect x="150" y="160" width="30" height="10" fill="#4e0e56"/>
+
+    <rect x="70" y="180" width="30" height="10" fill="#4e0e56"/>
+    <rect x="110" y="180" width="20" height="20" rx="3" fill="#00D2C4"/>
+    <rect x="140" y="190" width="20" height="10" fill="#4e0e56"/>
+    <rect x="170" y="170" width="20" height="20" fill="#4e0e56"/>
+    <rect x="200" y="180" width="20" height="10" fill="#4e0e56"/>
+
+    <rect x="80" y="200" width="20" height="20" fill="#4e0e56"/>
+    <rect x="140" y="210" width="30" height="10" fill="#4e0e56"/>
+    <rect x="180" y="200" width="10" height="20" fill="#4e0e56"/>
+    <rect x="200" y="210" width="20" height="10" fill="#4e0e56"/>
+
+    <!-- Center Icon Badge -->
+    <circle cx="115" cy="115" r="24" fill="#FFFFFF" />
+    <circle cx="115" cy="115" r="20" fill="#721a7b" />
+    <text x="115" y="122" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="900" fill="#00D2C4" text-anchor="middle">Y</text>
+  </g>
+
+  <!-- Temporary Badge Ribbon -->
+  <g transform="translate(190, 370)">
+    <rect x="-95" y="-14" width="190" height="28" rx="14" fill="#FFC107" />
+    <text x="0" y="5" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="900" fill="#5C3A00" text-anchor="middle" letter-spacing="0.5">
+      ⚠️ QR TEMPORAL
+    </text>
+  </g>
+
+  <!-- Footer Info Note -->
+  <text x="190" y="415" font-family="'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">
+    Acepta Yape y Plin (Cualquier Banco)
+  </text>
+  <text x="190" y="435" font-family="'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="500" fill="#00D2C4" text-anchor="middle">
+    Indica tu Nombre y Apellido en el mensaje del Yape
+  </text>
+</svg>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Registro - Retiro Jóvenes</title>
+    <title>Editar Registro - Retiro Jóvenes 2026</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
@@ -38,10 +38,10 @@
     <!-- HERO -->
     <div class="hero-header" style="padding: 1.5rem 1rem;">
         <h1 style="font-size:1.4rem;"><i class="bi bi-pencil-square"></i> Editar Registro</h1>
-        <p>Modifica la modalidad de asistencia</p>
+        <p>Modifica la iglesia, modalidad o detalle de los 3 abonos</p>
     </div>
 
-    <div class="container py-4" style="max-width:700px;">
+    <div class="container py-4" style="max-width:720px;">
 
         <!-- Persona Info Card -->
         <div class="card-retiro mb-4">
@@ -61,9 +61,29 @@
 
         <!-- Edit Form -->
         <form th:action="@{/crud/editar/{id}(id=${registro.id})}" method="POST">
+
+            <!-- Editar Iglesia -->
             <div class="card-retiro mb-4">
                 <div class="card-header">
-                    <i class="bi bi-calendar-check"></i> Cambiar Modalidad
+                    <i class="bi bi-buildings"></i> Iglesia de Procedencia
+                </div>
+                <div class="p-4">
+                    <label class="form-label fw-bold" style="color:var(--marron-profundo);">
+                        <i class="bi bi-geo-alt-fill" style="color:var(--dorado-principal);"></i> Selecciona la Iglesia:
+                    </label>
+                    <select name="iglesia" class="form-select form-select-lg" style="border-radius:12px; border:2px solid #e8d5b0; font-weight:700;">
+                        <option th:each="igl : ${iglesias}"
+                                th:value="${igl.name()}"
+                                th:text="${igl.displayName}"
+                                th:selected="${registro.iglesia != null and igl.name() == registro.iglesia.name()}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Editar Modalidad -->
+            <div class="card-retiro mb-4">
+                <div class="card-header">
+                    <i class="bi bi-calendar-check"></i> Modalidad de Asistencia
                 </div>
                 <div class="p-4">
                     <div class="row g-3">
@@ -83,80 +103,87 @@
                 </div>
             </div>
 
-            <!-- Cambiar Medio de Pago -->
+            <!-- Editar Historial de Pagos (Hasta 3) -->
             <div class="card-retiro mb-4">
                 <div class="card-header">
-                    <i class="bi bi-credit-card"></i> Cambiar Medio de Pago
+                    <i class="bi bi-cash-stack"></i> Detalle de Pagos / Abonos (Hasta 3)
                 </div>
                 <div class="p-4">
-                    <div class="row g-3 justify-content-center">
-                        <div class="col-md-5" th:each="mp : ${mediosPago}">
-                            <div class="pago-option"
-                                 th:data-value="${mp.name()}"
-                                 th:classappend="${registro.medioPago != null and mp.name() == registro.medioPago.name()} ? ' selected' : ''"
-                                 onclick="selectMedioPago(this.getAttribute('data-value'))">
-                                <div class="pago-check"><i class="bi bi-check"></i></div>
-                                <input type="radio"
-                                       name="medioPago"
-                                       th:value="${mp.name()}"
-                                       th:checked="${registro.medioPago != null and mp.name() == registro.medioPago.name()}" required>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div style="font-size:2rem;" th:text="${mp.icono}"></div>
-                                    <div>
-                                        <div style="font-weight:800; font-size:1.05rem; color:var(--marron-profundo);" th:text="${mp.displayName}"></div>
-                                        <small style="color:#666;" th:text="${mp.name() == 'YAPE_PLIN' ? 'Transferencia digital' : 'Pago en físico'}"></small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <p class="text-muted small mb-3">
+                        Puedes ajustar los montos y medios de pago para cada uno de los 3 abonos permitidos.
+                    </p>
 
-            <!-- Cambiar Condición de Pago -->
-            <div class="card-retiro mb-4">
-                <div class="card-header">
-                    <i class="bi bi-cash-stack"></i> Estado y Monto de Pago
-                </div>
-                <div class="p-4">
-                    <div class="row g-3 justify-content-center mb-3">
-                        <div class="col-md-5">
-                            <div class="form-check p-3 border rounded-3" style="background:white; cursor:pointer;" onclick="setEditTipoPago('TOTAL')">
-                                <input class="form-check-input ms-1 me-2" type="radio" name="tipoPago" id="editTipoTotal" value="TOTAL"
-                                       th:checked="${registro.pagoCompleto}">
-                                <label class="form-check-label fw-bold" for="editTipoTotal" style="color:var(--marron-profundo); cursor:pointer;">
-                                    ✅ Pago Completo (100%)
-                                </label>
-                                <div class="small text-muted ms-4">Cancela el monto total del retiro</div>
-                            </div>
+                    <!-- Pago 1 -->
+                    <div class="p-3 mb-3 border rounded-3" style="background:#fffcf5;">
+                        <div class="fw-bold mb-2" style="color:var(--marron-profundo);">
+                            <span class="badge bg-primary me-1">1° Abono / Pago Inicial</span>
                         </div>
-                        <div class="col-md-5">
-                            <div class="form-check p-3 border rounded-3" style="background:white; cursor:pointer;" onclick="setEditTipoPago('ADELANTO')">
-                                <input class="form-check-input ms-1 me-2" type="radio" name="tipoPago" id="editTipoAdelanto" value="ADELANTO"
-                                       th:checked="${!registro.pagoCompleto}">
-                                <label class="form-check-label fw-bold" for="editTipoAdelanto" style="color:var(--marron-profundo); cursor:pointer;">
-                                    ⏳ Adelanto / Pago Parcial
-                                </label>
-                                <div class="small text-muted ms-4">Registra solo un abono o adelanto</div>
+                        <div class="row g-2 align-items-center">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Monto (S/):</label>
+                                <input type="number" name="montoPago1" class="form-control" min="1"
+                                       th:value="${registro.montoPago1 != null ? registro.montoPago1 : registro.montoPagado}">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Medio de Pago:</label>
+                                <select name="medioPago1" class="form-select">
+                                    <option th:each="mp : ${mediosPago}"
+                                            th:value="${mp.name()}"
+                                            th:text="${mp.icono + ' ' + mp.displayName}"
+                                            th:selected="${registro.medioPago1 != null ? mp.name() == registro.medioPago1.name() : mp.name() == registro.medioPago.name()}"></option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Input para monto pagado -->
-                    <div id="divEditAdelanto" th:style="${registro.pagoCompleto} ? 'display:none; max-width:400px; margin:0 auto;' : 'max-width:400px; margin:0 auto;'">
-                        <label class="form-label fw-bold" style="color:var(--marron-profundo);">
-                            <i class="bi bi-coin" style="color:var(--dorado-principal);"></i> Monto Pagado Hasta Ahora (S/):
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text fw-bold" style="background:var(--fondo-claro); border:2px solid #e8d5b0;">S/</span>
-                            <input type="number" id="inputEditMonto" name="montoPagado" class="form-control" th:value="${registro.montoPagado}" min="1"
-                                   style="border:2px solid #e8d5b0; border-radius:0 10px 10px 0;">
+                    <!-- Pago 2 -->
+                    <div class="p-3 mb-3 border rounded-3" style="background:#f8faff;">
+                        <div class="fw-bold mb-2" style="color:#1d4ed8;">
+                            <span class="badge bg-info text-dark me-1">2° Abono</span> (Opcional)
                         </div>
-                        <div class="mt-2 text-muted fw-bold" style="font-size:0.85rem;" id="editSaldoInfo">
-                            Total: S/ <span th:text="${registro.montoTotal}"></span> &bull;
-                            <span th:if="${registro.saldoPendiente > 0}" style="color:#d9534f;" th:text="'Resta pagar: S/ ' + ${registro.saldoPendiente}"></span>
-                            <span th:unless="${registro.saldoPendiente > 0}" style="color:#198754;">Saldo: S/ 0 (Completo)</span>
+                        <div class="row g-2 align-items-center">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Monto (S/):</label>
+                                <input type="number" name="montoPago2" class="form-control" min="0" placeholder="0 si no aplica"
+                                       th:value="${registro.montoPago2}">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Medio de Pago:</label>
+                                <select name="medioPago2" class="form-select">
+                                    <option th:each="mp : ${mediosPago}"
+                                            th:value="${mp.name()}"
+                                            th:text="${mp.icono + ' ' + mp.displayName}"
+                                            th:selected="${registro.medioPago2 != null and mp.name() == registro.medioPago2.name()}"></option>
+                                </select>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Pago 3 -->
+                    <div class="p-3 mb-3 border rounded-3" style="background:#f8fff9;">
+                        <div class="fw-bold mb-2" style="color:#15803d;">
+                            <span class="badge bg-success me-1">3° Abono / Pago Final</span> (Opcional)
+                        </div>
+                        <div class="row g-2 align-items-center">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Monto (S/):</label>
+                                <input type="number" name="montoPago3" class="form-control" min="0" placeholder="0 si no aplica"
+                                       th:value="${registro.montoPago3}">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Medio de Pago:</label>
+                                <select name="medioPago3" class="form-select">
+                                    <option th:each="mp : ${mediosPago}"
+                                            th:value="${mp.name()}"
+                                            th:text="${mp.icono + ' ' + mp.displayName}"
+                                            th:selected="${registro.medioPago3 != null and mp.name() == registro.medioPago3.name()}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning py-2 small mb-0">
+                        <i class="bi bi-info-circle-fill"></i> El sistema recalculará automáticamente el total pagado, el saldo pendiente y el estado (Completo vs Adelanto) con base en estos montos y la modalidad.
                     </div>
                 </div>
             </div>
@@ -174,30 +201,11 @@
 
     <!-- FOOTER -->
     <footer>
-        <span>II Retiro Presbiterial de Jóvenes</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
+        <span>II Retiro Presbiterial de Jóvenes 2026</span> &bull; Jóvenes, Volvamos a Dios &bull; Canto Grande
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/app.js"></script>
-    <script>
-        function setEditTipoPago(tipo) {
-            const radioTotal = document.getElementById('editTipoTotal');
-            const radioAdelanto = document.getElementById('editTipoAdelanto');
-            const divAdelanto = document.getElementById('divEditAdelanto');
-            const inputMonto = document.getElementById('inputEditMonto');
-
-            if (tipo === 'TOTAL') {
-                if (radioTotal) radioTotal.checked = true;
-                if (divAdelanto) divAdelanto.style.display = 'none';
-            } else {
-                if (radioAdelanto) radioAdelanto.checked = true;
-                if (divAdelanto) {
-                    divAdelanto.style.display = 'block';
-                    if (inputMonto) inputMonto.focus();
-                }
-            }
-        }
-    </script>
 </body>
 
 </html>
