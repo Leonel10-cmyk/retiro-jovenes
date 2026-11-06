@@ -66,19 +66,28 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(245,166,35,0.15) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(245, 166, 35, 0.15) 0%, transparent 60%);
     animation: shimmer 4s infinite;
 }
 
 @keyframes shimmer {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.1); opacity: 1; }
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
 }
 
 .hero-header h1 {
     font-size: 1.8rem;
     font-weight: 900;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
     margin: 0;
     position: relative;
 }
@@ -180,14 +189,17 @@ body {
 .autocomplete-list::-webkit-scrollbar {
     width: 8px;
 }
+
 .autocomplete-list::-webkit-scrollbar-track {
     background: #fdfaf3;
     border-radius: 10px;
 }
+
 .autocomplete-list::-webkit-scrollbar-thumb {
     background: var(--dorado-principal);
     border-radius: 10px;
 }
+
 .autocomplete-list::-webkit-scrollbar-thumb:hover {
     background: var(--dorado-oscuro);
 }
@@ -250,13 +262,27 @@ body {
 }
 
 @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-6px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .badge-iglesia {
@@ -283,7 +309,7 @@ body {
     font-weight: 900;
     font-size: 1.5rem;
     margin: 0 auto 1rem;
-    box-shadow: 0 4px 15px rgba(245,166,35,0.4);
+    box-shadow: 0 4px 15px rgba(245, 166, 35, 0.4);
 }
 
 .persona-name {
@@ -362,7 +388,10 @@ body {
 .modalidad-option::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: linear-gradient(135deg, var(--fondo-claro), transparent);
     opacity: 0;
     transition: opacity 0.3s;
@@ -509,13 +538,13 @@ body {
     font-weight: 700;
     font-size: 1rem;
     transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(245,166,35,0.4);
+    box-shadow: 0 4px 15px rgba(245, 166, 35, 0.4);
 }
 
 .btn-dorado:hover {
     background: linear-gradient(135deg, var(--acento), var(--dorado-oscuro));
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(245,166,35,0.5);
+    box-shadow: 0 6px 20px rgba(245, 166, 35, 0.5);
     color: white;
 }
 
@@ -628,7 +657,7 @@ body {
 /* ===== FOOTER ===== */
 footer {
     background: linear-gradient(135deg, var(--marron-profundo), var(--dorado-oscuro));
-    color: rgba(255,255,255,0.8);
+    color: rgba(255, 255, 255, 0.8);
     text-align: center;
     padding: 1.5rem;
     margin-top: 3rem;
@@ -642,7 +671,15 @@ footer span {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 576px) {
-    .hero-header h1 { font-size: 1.3rem; }
-    .modalidad-price { font-size: 1.5rem; }
-    .table-retiro { font-size: 0.85rem; }
+    .hero-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .modalidad-price {
+        font-size: 1.5rem;
+    }
+
+    .table-retiro {
+        font-size: 0.85rem;
+    }
 }

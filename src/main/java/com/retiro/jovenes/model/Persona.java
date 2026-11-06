@@ -29,6 +29,10 @@ public class Persona {
     @Column(name = "numero_grupo", nullable = false)
     private Integer numeroGrupo;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "iglesia", nullable = false, columnDefinition = "varchar(50) default 'CANTO_GRANDE'")
+    private Registro.Iglesia iglesia = Registro.Iglesia.CANTO_GRANDE;
+
     public enum Rol {
         LIDER_CAPITAN("Líder Capitán"),
         LIDER_ALTERNO("Líder Alterno"),

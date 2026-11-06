@@ -1,6 +1,7 @@
 package com.retiro.jovenes.controller;
 
 import com.retiro.jovenes.model.Persona;
+import com.retiro.jovenes.model.Registro;
 import com.retiro.jovenes.service.PersonaService;
 import com.retiro.jovenes.service.RegistroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class PersonaWebController {
 
         model.addAttribute("personas", lista);
         model.addAttribute("roles", Persona.Rol.values());
+        model.addAttribute("iglesias", Registro.Iglesia.values());
         model.addAttribute("totalPersonas", lista.size());
         model.addAttribute("totalMiembros", totalMiembros);
         model.addAttribute("totalAspirantes", totalAspirantes);
@@ -45,6 +47,7 @@ public class PersonaWebController {
     public String guardar(@RequestParam(required = false) Long id,
                           @RequestParam String nombres,
                           @RequestParam(required = false, defaultValue = "") String apellidos,
+                          @RequestParam(defaultValue = "CANTO_GRANDE") Registro.Iglesia iglesia,
                           @RequestParam Persona.Rol rol,
                           @RequestParam Integer numeroGrupo,
                           RedirectAttributes redirectAttributes) {
@@ -62,11 +65,12 @@ public class PersonaWebController {
 
         persona.setNombres(nombres.trim());
         persona.setApellidos(apellidos != null ? apellidos.trim() : "");
+        persona.setIglesia(iglesia != null ? iglesia : Registro.Iglesia.CANTO_GRANDE);
         persona.setRol(rol);
         persona.setNumeroGrupo(numeroGrupo);
         personaService.save(persona);
 
-        redirectAttributes.addFlashAttribute("success", "Datos de " + persona.getNombreCompleto() + " guardados correctamente.");
+        redirectAttributes.addFlashAttribute("success", "Datos de " + persona.getNombreCompleto() + " (" + persona.getIglesia().getDisplayName() + ") guardados correctamente.");
         return "redirect:/personas";
     }
 
@@ -78,6 +82,7 @@ public class PersonaWebController {
         }
         model.addAttribute("persona", persona.get());
         model.addAttribute("roles", Persona.Rol.values());
+        model.addAttribute("iglesias", Registro.Iglesia.values());
         return "persona-editar";
     }
 

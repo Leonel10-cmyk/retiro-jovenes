@@ -74,6 +74,13 @@ public class Registro {
     @Column(name = "fecha_pago3")
     private LocalDateTime fechaPago3;
 
+    // ============ CONTROL DE SEGURIDAD / PAPELERA DE RECICLAJE ============
+    @Column(name = "eliminado", nullable = false)
+    private boolean eliminado = false;
+
+    @Column(name = "fecha_eliminacion")
+    private LocalDateTime fechaEliminacion;
+
     @PrePersist
     protected void onCreate() {
         if (fechaRegistro == null) {

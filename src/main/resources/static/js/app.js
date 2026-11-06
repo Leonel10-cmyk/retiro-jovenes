@@ -78,7 +78,7 @@ function mostrarAutocomplete(personas) {
             <div class="person-avatar">${ini}</div>
             <div class="person-info">
                 <strong>${p.nombreCompleto}</strong>
-                <small><i class="bi bi-people"></i> Grupo ${p.numeroGrupo} &bull; ${p.rolDisplay}</small>
+                <small><i class="bi bi-people"></i> Grupo ${p.numeroGrupo} &bull; ${p.rolDisplay} &bull; <i class="bi bi-buildings"></i> ${p.iglesiaDisplay || 'Canto Grande'}</small>
             </div>
         </div>
         `;
@@ -95,6 +95,15 @@ function seleccionarPersona(persona) {
     mostrarPersonaCard(persona);
 
     if (personaIdInput) personaIdInput.value = persona.id;
+
+    // Sincronizar automáticamente la iglesia de procedencia en el Paso 1
+    if (persona.iglesia) {
+        const selectIglesia = document.getElementById('selectIglesia');
+        if (selectIglesia) {
+            selectIglesia.value = persona.iglesia;
+        }
+    }
+
     if (submitBtn) submitBtn.disabled = false;
 }
 
@@ -118,6 +127,9 @@ function mostrarPersonaCard(persona) {
         <div class="persona-avatar-large">${iniciales}</div>
         <div class="persona-name">${persona.nombreCompleto}</div>
         <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <span class="badge" style="background:linear-gradient(135deg, #5C3A00, #3E2700); color:#FFD700; border-radius:8px; padding:0.4rem 0.75rem; font-weight:700;">
+                <i class="bi bi-buildings"></i> ${persona.iglesiaDisplay || 'Iglesia Canto Grande'}
+            </span>
             <span class="badge-rol badge-${persona.rol}">${icon} ${persona.rolDisplay}</span>
             <span class="badge-grupo"><i class="bi bi-people-fill"></i> Grupo ${persona.numeroGrupo}</span>
         </div>

@@ -27,6 +27,8 @@ public class PersonaController {
         map.put("rol", p.getRol().name());
         map.put("rolDisplay", p.getRol().getDisplayName());
         map.put("numeroGrupo", p.getNumeroGrupo());
+        map.put("iglesia", p.getIglesia() != null ? p.getIglesia().name() : "CANTO_GRANDE");
+        map.put("iglesiaDisplay", p.getIglesia() != null ? p.getIglesia().getDisplayName() : "Iglesia Canto Grande");
         return map;
     }
 

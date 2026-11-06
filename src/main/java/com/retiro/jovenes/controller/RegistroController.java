@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -122,6 +123,9 @@ public class RegistroController {
         model.addAttribute("cantEfectivo", cantEfectivo);
         model.addAttribute("mediosPago", Registro.MedioPago.values());
         model.addAttribute("iglesias", Registro.Iglesia.values());
+        List<Registro> eliminados = registroService.findEliminados();
+        model.addAttribute("eliminados", eliminados);
+        model.addAttribute("totalEliminados", eliminados.size());
         return "crud";
     }
 
@@ -220,10 +224,25 @@ public class RegistroController {
 
     @PostMapping("/crud/eliminar/{id}")
     public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Optional<Registro> opt = registroService.findById(id);
+        String nombre = opt.map(r -> r.getPersona().getNombreCompleto()).orElse("El registro");
         registroService.deleteById(id);
-        redirectAttributes.addFlashAttribute("success", "Registro eliminado.");
+        redirectAttributes.addFlashAttribute("success",
+                "El registro de " + nombre + " ha sido movido a la Papelera de Reciclaje (puedes restaurarlo cuando lo desees).");
         return "redirect:/crud";
-    }}
+    }
+
+    @PostMapping("/crud/restaurar/{id}")
+    public String restaurar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Optional<Registro> opt = registroService.findById(id);
+        if (opt.isPresent()) {
+            registroService.restaurar(id);
+            redirectAttributes.addFlashAttribute("success",
+                    "¡Registro de " + opt.get().getPersona().getNombreCompleto() + " restaurado exitosamente!");
+        }
+        return "redirect:/crud";
+    }
+}
 
     
     

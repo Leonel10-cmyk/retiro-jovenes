@@ -92,10 +92,27 @@ public class RegistroService {
     }
 
     public void deleteById(Long id) {
-        registroRepository.deleteById(id);
+        // Soft Delete: Protección contra eliminación accidental o intencional
+        findById(id).ifPresent(r -> {
+            r.setEliminado(true);
+            r.setFechaEliminacion(LocalDateTime.now());
+            registroRepository.save(r);
+        });
+    }
+
+    public void restaurar(Long id) {
+        findById(id).ifPresent(r -> {
+            r.setEliminado(false);
+            r.setFechaEliminacion(null);
+            registroRepository.save(r);
+        });
+    }
+
+    public List<Registro> findEliminados() {
+        return registroRepository.findEliminadosWithPersona();
     }
 
     public boolean yaRegistrado(Long personaId) {
-        return registroRepository.existsByPersonaId(personaId);
+        return registroRepository.existsByPersonaIdAndEliminadoFalse(personaId);
     }
 }

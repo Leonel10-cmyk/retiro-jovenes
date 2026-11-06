@@ -67,6 +67,18 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label fw-bold" style="color:var(--marron-profundo);">
+                            <i class="bi bi-buildings" style="color:var(--dorado-principal);"></i> Iglesia de Procedencia <span class="text-danger">*</span>
+                        </label>
+                        <select name="iglesia" class="form-select" required style="border-radius:10px; border:2px solid #e8d5b0; padding:0.6rem 1rem;">
+                            <option th:each="igl : ${iglesias}"
+                                    th:value="${igl.name()}"
+                                    th:text="${igl.displayName}"
+                                    th:selected="${igl == persona.iglesia}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label fw-bold" style="color:var(--marron-profundo);">Rol <span class="text-danger">*</span></label>
                         <select name="rol" class="form-select" required style="border-radius:10px; border:2px solid #e8d5b0; padding:0.6rem 1rem;">
                             <option th:each="r : ${roles}"

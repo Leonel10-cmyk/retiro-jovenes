@@ -3,8 +3,8 @@
 -- II RETIRO PRESBITERIAL DE JOVENES "VOLVAMOS A DIOS"
 -- ==========================================================
 
-INSERT INTO persona (id, nombres, apellidos, rol, numero_grupo)
-SELECT * FROM (VALUES
+INSERT INTO persona (id, nombres, apellidos, rol, numero_grupo, iglesia)
+SELECT id, nombres, apellidos, rol, numero_grupo, 'CANTO_GRANDE' FROM (VALUES
   -- DIRECTIVOS / SUPERVISORES
   (1,  'Brandon',           'Manuyama',           'DIRECTIVO',      1),
   (2,  'Jilmar',            'Perez',              'DIRECTIVO',      3),
@@ -235,6 +235,9 @@ SELECT * FROM (VALUES
   (294, 'Paola Rebeca',     'Huaman',             'ASPIRANTE',     20)
 ) AS tmp(id, nombres, apellidos, rol, numero_grupo)
 WHERE NOT EXISTS (SELECT 1 FROM persona WHERE persona.id = tmp.id);
+
+-- Asegurar que cualquier registro existente pertenezca por defecto a Iglesia Canto Grande
+UPDATE persona SET iglesia = 'CANTO_GRANDE' WHERE iglesia IS NULL;
 
 -- Reiniciar la secuencia de ID para nuevos registros agregados manualmente
 ALTER TABLE persona ALTER COLUMN id RESTART WITH 1000;
