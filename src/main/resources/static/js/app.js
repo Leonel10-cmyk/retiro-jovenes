@@ -58,15 +58,20 @@ function mostrarAutocomplete(personas) {
 
     if (personas.length === 0) {
         autocompleteList.innerHTML = `
-            <div class="autocomplete-item" style="cursor:default; color:#999;">
-                <i class="bi bi-search" style="color:var(--dorado-oscuro)"></i>
-                <span>No se encontraron resultados</span>
+            <div class="autocomplete-item" style="cursor:default; color:#8b6013; padding: 1rem;">
+                <i class="bi bi-search me-2" style="color:var(--dorado-oscuro); font-size: 1.1rem;"></i>
+                <span>No se encontraron hermanos/as con ese nombre en el padrón</span>
             </div>`;
         autocompleteList.style.display = 'block';
         return;
     }
 
-    autocompleteList.innerHTML = personas.map(p => {
+    const header = `
+        <div style="padding: 7px 14px; background: #fffcf4; border-bottom: 1px solid #f2ead8; font-size: 0.78rem; font-weight: 700; color: var(--dorado-oscuro); letter-spacing: 0.4px;">
+            <i class="bi bi-people-fill me-1"></i> ${personas.length} ${personas.length === 1 ? 'hermano/a encontrado' : 'hermanos/as encontrados'} (haz clic para seleccionar)
+        </div>`;
+
+    const items = personas.map(p => {
         const ini = ((p.nombres ? p.nombres.charAt(0) : '') + (p.apellidos ? p.apellidos.charAt(0) : '')).toUpperCase();
         return `
         <div class="autocomplete-item" onclick="seleccionarPersona(${JSON.stringify(p).replace(/"/g, '&quot;')})">
@@ -79,6 +84,7 @@ function mostrarAutocomplete(personas) {
         `;
     }).join('');
 
+    autocompleteList.innerHTML = header + items;
     autocompleteList.style.display = 'block';
 }
 

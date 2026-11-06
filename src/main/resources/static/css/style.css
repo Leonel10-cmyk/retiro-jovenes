@@ -97,7 +97,7 @@ body {
     border: none;
     border-radius: 16px;
     box-shadow: 0 4px 20px var(--sombra);
-    overflow: hidden;
+    position: relative;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -112,6 +112,8 @@ body {
     font-weight: 700;
     padding: 1rem 1.5rem;
     border: none;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
 }
 
 .card-retiro .card-header i {
@@ -119,16 +121,24 @@ body {
     margin-right: 0.5rem;
 }
 
+/* Card específica del buscador para que el menú flotante no se corte */
+.card-search-step {
+    position: relative;
+    z-index: 50 !important;
+    overflow: visible !important;
+}
+
 /* ===== SEARCH BOX ===== */
 .search-container {
     position: relative;
+    z-index: 60;
 }
 
 .search-input {
     border: 2px solid var(--dorado-principal);
     border-radius: 12px;
-    padding: 0.75rem 1rem 0.75rem 3rem;
-    font-size: 1rem;
+    padding: 0.85rem 1rem 0.85rem 3.2rem;
+    font-size: 1.05rem;
     transition: all 0.3s;
     background-color: white;
     width: 100%;
@@ -137,43 +147,59 @@ body {
 .search-input:focus {
     outline: none;
     border-color: var(--dorado-oscuro);
-    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.3);
+    box-shadow: 0 0 0 4px rgba(245, 166, 35, 0.28);
 }
 
 .search-icon {
     position: absolute;
-    left: 1rem;
+    left: 1.15rem;
     top: 50%;
     transform: translateY(-50%);
     color: var(--dorado-oscuro);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     pointer-events: none;
 }
 
 /* ===== AUTOCOMPLETE DROPDOWN ===== */
 .autocomplete-list {
     position: absolute;
-    top: calc(100% + 4px);
+    top: calc(100% + 6px);
     left: 0;
     right: 0;
     background: white;
     border: 2px solid var(--dorado-principal);
-    border-radius: 12px;
-    max-height: 280px;
+    border-radius: 14px;
+    max-height: 380px;
     overflow-y: auto;
-    z-index: 1000;
-    box-shadow: 0 8px 25px var(--sombra);
+    z-index: 9999;
+    box-shadow: 0 16px 45px rgba(92, 58, 0, 0.25), 0 4px 15px rgba(0, 0, 0, 0.08);
     display: none;
 }
 
+/* Scrollbar estilizada */
+.autocomplete-list::-webkit-scrollbar {
+    width: 8px;
+}
+.autocomplete-list::-webkit-scrollbar-track {
+    background: #fdfaf3;
+    border-radius: 10px;
+}
+.autocomplete-list::-webkit-scrollbar-thumb {
+    background: var(--dorado-principal);
+    border-radius: 10px;
+}
+.autocomplete-list::-webkit-scrollbar-thumb:hover {
+    background: var(--dorado-oscuro);
+}
+
 .autocomplete-item {
-    padding: 0.75rem 1rem;
+    padding: 0.85rem 1.15rem;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    border-bottom: 1px solid #f0e8d0;
-    transition: background 0.15s;
+    gap: 0.85rem;
+    border-bottom: 1px solid #f2ead8;
+    transition: background 0.15s, transform 0.1s;
 }
 
 .autocomplete-item:last-child {
@@ -186,8 +212,8 @@ body {
 }
 
 .autocomplete-item .person-avatar {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     background: linear-gradient(135deg, var(--dorado-principal), var(--dorado-oscuro));
     border-radius: 50%;
     display: flex;
@@ -195,19 +221,22 @@ body {
     justify-content: center;
     color: white;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(139, 96, 19, 0.25);
 }
 
 .autocomplete-item .person-info strong {
     display: block;
     color: var(--marron-profundo);
-    font-size: 0.95rem;
+    font-size: 0.98rem;
+    font-weight: 700;
 }
 
 .autocomplete-item .person-info small {
     color: var(--dorado-oscuro);
-    font-size: 0.8rem;
+    font-size: 0.82rem;
+    font-weight: 600;
 }
 
 /* ===== PERSONA CARD (result) ===== */
